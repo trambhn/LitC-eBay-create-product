@@ -1,0 +1,1720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LitCommerce — eBay Listings (Add New Product)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+<style>
+:root{
+  --blue:#1972F5; --blue-dark:#0052CC; --teal:#00B8A9; --teal-dark:#00A294;
+  --ink:#172B4D; --sub:#5E6C84; --muted:#97A0AF; --line:#E8ECF0; --line2:#DFE1E6;
+  --bg-soft:#F4F5F7; --violet:#7B61FF;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',-apple-system,Segoe UI,Roboto,sans-serif;color:var(--ink);background:#fff;}
+.mi{font-family:'Material Icons';font-weight:normal;font-style:normal;line-height:1;
+    display:inline-block;vertical-align:middle;-webkit-font-feature-settings:'liga';font-feature-settings:'liga';}
+.row{display:flex;align-items:center;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;}
+.btn{display:inline-flex;align-items:center;gap:6px;height:44px;padding:0 16px;border-radius:8px;
+     font-size:14.5px;font-weight:600;white-space:nowrap;transition:.15s;}
+.btn .mi{font-size:20px;}
+.btn-primary{background:var(--blue);color:#fff;}
+.btn-primary:hover{background:var(--blue-dark);}
+.btn-teal{background:var(--teal);color:#fff;}
+.btn-teal:hover{background:var(--teal-dark);box-shadow:0 4px 12px rgba(0,184,169,.3);}
+.btn-teal-outline{background:#fff;color:var(--teal-dark);border:1px solid var(--teal);}
+.btn-teal-outline:hover{background:#E9FBF9;}
+.btn-teal-outline .mi{color:var(--teal);}
+.btn-outline{background:#fff;color:#42526E;border:1px solid var(--line2);}
+.btn-outline:hover{border-color:#C1C7D0;background:var(--bg-soft);}
+.btn-sm{height:40px;}
+.btn-disabled{background:#fff;color:#A5ADBA;border:1px solid var(--line2);cursor:default;}
+.ebay{font-weight:700;font-style:italic;letter-spacing:-1px;}
+.ebay .e{color:#E53238;}.ebay .b{color:#0064D2;}.ebay .a{color:#F5AF02;}.ebay .y{color:#86B817;}
+
+/* layout */
+.banner{background:#FCEED4;border-bottom:1px solid #F5D98B;display:flex;align-items:center;gap:10px;padding:11px 24px;}
+.banner .mi{color:#E8A33D;font-size:22px;}
+.banner span{font-size:14.5px;font-weight:600;color:#5C4813;}
+.shell{display:flex;min-height:100vh;}
+
+/* sidebar */
+.side{width:248px;flex-shrink:0;border-right:1px solid var(--line);position:sticky;top:0;height:100vh;
+      display:flex;flex-direction:column;background:#fff;}
+.side-logo{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;}
+.logo-badge{width:40px;height:40px;border-radius:8px;background:linear-gradient(135deg,#1972F5,#00B8A9);
+  display:flex;align-items:center;justify-content:center;color:#fff;}
+.logo-badge .mi{font-size:22px;}
+.logo-txt b{display:block;font-size:13px;font-weight:700;line-height:1.25;}
+.collapse{width:24px;height:24px;border:1px solid var(--line);border-radius:6px;display:flex;align-items:center;justify-content:center;}
+.collapse .mi{font-size:16px;color:var(--sub);}
+.acct{margin:0 16px 8px;padding:8px 12px;border-radius:10px;display:flex;align-items:center;gap:8px;cursor:pointer;}
+.acct:hover{background:var(--bg-soft);}
+.acct .mi.lead{font-size:20px;color:var(--blue);}
+.acct .name{font-size:14px;font-weight:600;flex:1;}
+.acct .mi.exp{font-size:18px;color:var(--sub);}
+.nav{flex:1;overflow-y:auto;padding:4px 0;}
+.nav-item{display:flex;align-items:center;gap:0;margin:2px 8px;padding:9px 14px;border-radius:10px;cursor:pointer;color:#42526E;}
+.nav-item:hover{background:var(--bg-soft);}
+.nav-item .mi{font-size:20px;color:var(--sub);width:34px;}
+.nav-item .lbl{font-size:14px;font-weight:500;}
+.nav-item.active{background:#EAF2FE;}
+.nav-item.active .mi,.nav-item.active .lbl{color:var(--blue);}
+.nav-item.active .lbl{font-weight:600;}
+.subwrap{padding-left:8px;}
+.sub-item{display:flex;align-items:center;gap:10px;margin:2px 8px;padding:7px 14px 7px 28px;border-radius:10px;cursor:pointer;color:#42526E;}
+.sub-item:hover{background:var(--bg-soft);}
+.sub-item.active{background:#EAF2FE;}
+.sub-item.active .lbl{color:var(--blue);font-weight:600;}
+.sub-item .lbl{font-size:13.5px;font-weight:500;}
+.ch-ico{width:16px;height:16px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.side-foot{border-top:1px solid var(--line);padding:8px;}
+.foot-row{display:flex;align-items:center;gap:8px;padding:8px 16px;}
+.avatar{width:30px;height:30px;border-radius:50%;background:var(--ink);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.badge{position:relative;}
+.badge .dot{position:absolute;top:-2px;right:-4px;background:#FF5630;color:#fff;font-size:9px;font-weight:700;border-radius:9px;padding:1px 4px;}
+.badge .greendot{position:absolute;top:0;right:0;width:7px;height:7px;border-radius:50%;background:#36B37E;}
+
+/* main */
+.main{flex:1;min-width:0;padding:24px;}
+.head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:20px;}
+.head-left{display:flex;align-items:center;gap:12px;}
+.ebay-box{border:1px solid var(--line);border-radius:8px;padding:6px 10px;}
+.h-title{font-size:22px;font-weight:700;line-height:1.2;}
+.h-sub{font-size:13.5px;color:var(--sub);margin-top:4px;}
+.h-sub .off{color:#FF5630;font-weight:600;}
+.h-sub .on{color:#36B37E;font-weight:600;}
+.actions{display:flex;gap:10px;flex-shrink:0;}
+
+/* search */
+.search-row{display:flex;gap:10px;align-items:center;margin-bottom:16px;}
+.field{height:44px;border:1px solid var(--line2);border-radius:8px;display:flex;align-items:center;padding:0 12px;background:#fff;font-size:14px;}
+.field .mi{font-size:20px;color:var(--muted);margin-right:8px;}
+.field input{border:none;outline:none;font-size:14px;font-family:inherit;width:100%;color:var(--ink);background:transparent;}
+.field input::placeholder{color:var(--muted);}
+.f-grow{flex:1;}
+.f-sku{width:360px;}
+
+/* tabs */
+.tabs{display:flex;align-items:center;gap:32px;border-bottom:1px solid var(--line);margin-bottom:16px;}
+.tab{display:flex;align-items:center;gap:8px;padding-bottom:10px;margin-bottom:-1px;cursor:pointer;}
+.tab .t-lbl{font-size:15px;font-weight:600;color:var(--sub);}
+.tab.active{border-bottom:2px solid var(--blue);}
+.tab.active .t-lbl{color:var(--blue);}
+.pill{height:22px;padding:0 9px;border-radius:11px;display:inline-flex;align-items:center;font-size:12px;font-weight:700;}
+.pill-blue{background:var(--blue);color:#fff;}
+.pill-grey{background:#EBECF0;color:#42526E;}
+
+/* toolbar */
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;}
+.toolbar-left,.toolbar-right{display:flex;align-items:center;gap:10px;}
+.divider-v{width:1px;height:28px;background:var(--line);margin:0 4px;}
+.viewtoggle{display:flex;border:1px solid var(--line2);border-radius:8px;overflow:hidden;}
+.viewtoggle button{width:40px;height:40px;display:flex;align-items:center;justify-content:center;}
+.viewtoggle .mi{font-size:20px;color:var(--muted);}
+.viewtoggle .on{background:var(--bg-soft);}
+.viewtoggle .on .mi{color:#42526E;}
+.viewtoggle button:last-child{border-left:1px solid var(--line2);}
+
+/* dropdown menu */
+.menu-wrap{position:relative;}
+.menu{position:absolute;top:48px;left:0;min-width:260px;background:#fff;border:1px solid var(--line);
+      border-radius:12px;box-shadow:0 8px 28px rgba(23,43,77,.16);padding:6px;z-index:50;display:none;}
+.menu.open{display:block;}
+.menu-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;cursor:pointer;}
+.menu-item:hover{background:var(--bg-soft);}
+.menu-item .mi{font-size:20px;width:22px;text-align:center;}
+.menu-item .mtxt{font-size:14.5px;font-weight:500;}
+.menu-item.manual .mi{color:#42526E;}
+.menu-sep{height:1px;background:var(--line);margin:6px 4px;}
+.menu-ai-label{display:flex;align-items:center;gap:6px;padding:6px 12px 4px;}
+.menu-ai-label .mi{font-size:16px;color:var(--violet);}
+.menu-ai-label span{font-size:13px;font-weight:700;color:var(--violet);}
+.menu-item.ai .mi{color:var(--violet);}
+
+/* selection */
+.sel-row{display:flex;align-items:center;gap:16px;margin-bottom:8px;}
+.sel-row .c{font-size:14px;font-weight:600;color:#42526E;}
+.sel-row .all{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--sub);}
+.cbx{width:16px;height:16px;border:1.5px solid #C1C7D0;border-radius:3px;background:#fff;flex-shrink:0;}
+
+/* table */
+.table{border:1px solid var(--line);border-radius:12px;overflow:hidden;}
+.t-head,.t-row{display:flex;align-items:center;padding:10px 8px;}
+.t-head{background:#FAFBFC;border-bottom:1px solid var(--line);}
+.t-row{border-bottom:1px solid #EDF0F3;}
+.t-row:last-child{border-bottom:none;}
+.t-row:hover{background:#FAFBFC;}
+.c-chk{width:56px;display:flex;justify-content:center;}
+.c-img{width:64px;display:flex;justify-content:center;}
+.c-link{width:70px;display:flex;justify-content:center;position:relative;}
+.c-link .mi{font-size:22px;color:var(--blue);}
+.c-link .ldot{position:absolute;top:0;right:20px;width:7px;height:7px;border-radius:50%;background:var(--blue);}
+.c-status{width:110px;}
+.c-name{flex:1;padding-right:16px;}
+.c-sku{width:150px;}
+.c-qty{width:90px;}
+.th{font-size:13px;font-weight:700;color:#42526E;}
+.help-q{width:22px;height:22px;border-radius:50%;background:#0064D2;color:#fff;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.thumb{width:46px;height:46px;border:1px solid var(--line);border-radius:6px;background:#F4F5F7;display:flex;align-items:center;justify-content:center;}
+.thumb .mi{font-size:24px;color:var(--ink);}
+.name-link{font-size:14.5px;font-weight:600;color:var(--blue);cursor:pointer;}
+.name-link:hover{text-decoration:underline;}
+.cell-sub{font-size:14px;color:#42526E;}
+
+/* pagination */
+.pager{display:flex;align-items:center;justify-content:flex-end;gap:16px;margin-top:16px;padding-bottom:16px;}
+.pager .lbl{font-size:14px;color:var(--sub);}
+.mini-btn{display:inline-flex;align-items:center;gap:4px;height:34px;padding:0 12px;border:1px solid var(--line2);border-radius:8px;
+          color:#42526E;font-size:14px;font-weight:600;background:#fff;}
+.mini-btn .mi{font-size:18px;}
+.pg-arrows{display:flex;gap:4px;}
+.pg-arrows button{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:6px;}
+.pg-arrows .mi{font-size:22px;color:#42526E;}
+.pg-arrows .off .mi{color:#C1C7D0;}
+
+/* ============ ADD NEW PRODUCT DRAWER ============ */
+:root{ --np-ink:#1E2A4A; --np-slate:#5B6B8C; --np-royal:#3B5BDB; --np-royal-dark:#2F4BC0;
+       --np-violet:#7C3AED; --np-line:#E3E8F0; --np-soft:#F1F4F9; --np-subpanel:#F4F6FB;
+       --np-field:#F7F9FC; --np-red:#E5484D; }
+.np-overlay{position:fixed;inset:0;background:rgba(23,43,77,.45);opacity:0;visibility:hidden;
+  transition:.25s;z-index:100;}
+.np-overlay.open{opacity:1;visibility:visible;}
+.np-drawer{position:fixed;top:0;right:0;height:100vh;width:1180px;max-width:96vw;background:#fff;
+  box-shadow:-12px 0 40px rgba(23,43,77,.18);transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);
+  z-index:101;display:flex;flex-direction:column;}
+.np-overlay.open .np-drawer{transform:translateX(0);}
+
+.np-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 24px;
+  border-bottom:1px solid var(--np-line);flex-shrink:0;}
+.np-head-left{display:flex;align-items:center;gap:12px;}
+.np-head h2{font-size:19px;font-weight:700;color:var(--np-ink);}
+.np-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 24px;
+  border-top:1px solid var(--np-line);background:#fff;flex-shrink:0;}
+.np-foot-right{display:flex;align-items:center;gap:10px;}
+.np-btn{display:inline-flex;align-items:center;gap:7px;height:40px;padding:0 18px;border-radius:8px;
+  font-size:14px;font-weight:600;white-space:nowrap;transition:.15s;}
+.np-btn .mi{font-size:18px;}
+.np-btn-royal{background:var(--np-royal);color:#fff;}
+.np-btn-royal:hover{background:var(--np-royal-dark);}
+.np-btn-ghost{background:#fff;color:var(--np-slate);border:1px solid var(--np-line);}
+.np-btn-ghost:hover{background:var(--np-soft);}
+.np-close{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--np-slate);}
+.np-close:hover{background:var(--np-soft);}
+.np-close .mi{font-size:22px;}
+
+.np-body{flex:1;display:flex;min-height:0;}
+
+/* nav rail */
+.np-nav{width:236px;flex-shrink:0;border-right:1px solid var(--np-line);background:#fff;padding:16px 12px;overflow-y:auto;}
+.np-nav-title{font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--np-slate);
+  padding:4px 12px 10px;}
+.np-nav-item{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:9px;cursor:pointer;
+  color:var(--np-slate);font-size:14px;font-weight:500;margin-bottom:2px;}
+.np-nav-item:hover{background:var(--np-soft);}
+.np-nav-item.active{background:#EEF2FF;color:var(--np-royal);font-weight:600;}
+.np-nav-item .mi{font-size:19px;}
+.np-nav-item .req-dot{width:6px;height:6px;border-radius:50%;background:var(--np-red);margin-left:auto;}
+
+/* scroll content */
+.np-content{flex:1;overflow-y:auto;background:var(--np-soft);padding:20px;scroll-behavior:smooth;}
+.np-card{background:#fff;border:1px solid var(--np-line);border-radius:14px;margin-bottom:18px;overflow:hidden;}
+.np-card-head{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;
+  background:#FBFCFE;border-bottom:1px solid var(--np-line);cursor:pointer;}
+.np-card-head h3{font-size:16.5px;font-weight:700;color:var(--np-ink);}
+.np-card-head .mi{font-size:22px;color:var(--np-slate);}
+.np-card-body{display:flex;}
+.np-main{flex:1;padding:22px;min-width:0;}
+.np-aside{width:360px;flex-shrink:0;background:var(--np-subpanel);border-left:1px solid var(--np-line);padding:22px;}
+
+/* form atoms */
+.np-label{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:var(--np-ink);margin-bottom:7px;}
+.np-label .req{color:var(--np-red);font-style:italic;font-weight:600;font-size:12.5px;}
+.np-label .opt{color:var(--np-slate);font-weight:500;font-size:12.5px;}
+.np-info{width:16px;height:16px;border-radius:50%;background:#DCE5F5;color:#5878C7;font-size:11px;font-weight:700;
+  display:inline-flex;align-items:center;justify-content:center;font-style:normal;}
+.np-input{width:100%;height:44px;border:1px solid var(--np-line);border-radius:9px;background:var(--np-field);
+  padding:0 14px;font-size:14px;font-family:inherit;color:var(--np-ink);outline:none;}
+.np-input::placeholder{color:#9AA7C0;}
+.np-input:focus{border-color:var(--np-royal);background:#fff;}
+.np-input.err{border-color:var(--np-red);}
+.np-textarea{width:100%;min-height:96px;border:1px solid var(--np-line);border-radius:9px;background:var(--np-field);
+  padding:12px 14px;font-size:14px;font-family:inherit;color:var(--np-ink);outline:none;resize:vertical;}
+.np-select{position:relative;}
+.np-select .mi{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--np-slate);pointer-events:none;font-size:20px;}
+.np-select select{appearance:none;width:100%;height:44px;border:1px solid var(--np-line);border-radius:9px;
+  background:var(--np-field);padding:0 38px 0 14px;font-size:14px;font-family:inherit;color:var(--np-ink);outline:none;cursor:pointer;}
+.np-err-txt{color:var(--np-red);font-size:13px;margin-top:6px;}
+.np-field-row{margin-bottom:20px;}
+.np-grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px 18px;}
+.np-hint{font-size:13px;color:var(--np-slate);margin-top:6px;}
+.np-sub-h{font-size:15px;font-weight:700;color:var(--np-ink);margin:2px 0 14px;display:flex;align-items:center;gap:8px;}
+
+/* AI button */
+.np-ai{display:inline-flex;align-items:center;gap:6px;height:44px;padding:0 14px;border-radius:9px;background:#fff;
+  border:1px solid var(--np-line);box-shadow:0 1px 4px rgba(23,43,77,.06);color:var(--np-violet);font-weight:700;font-size:14px;cursor:pointer;}
+.np-ai:hover{background:#FAF7FF;}
+.np-ai .mi{font-size:18px;}
+.np-input-ai{display:flex;align-items:center;gap:10px;}
+.np-input-ai .np-input,.np-input-ai .np-select{flex:1;}
+.np-icon-btn{width:46px;height:44px;border:1px solid var(--np-line);border-radius:9px;background:#fff;
+  box-shadow:0 1px 4px rgba(23,43,77,.06);display:flex;align-items:center;justify-content:center;color:var(--np-royal);cursor:pointer;}
+.np-icon-btn:hover{background:var(--np-soft);}
+
+/* toggle */
+.np-toggle-row{display:flex;align-items:center;gap:11px;margin-bottom:16px;}
+.np-switch{width:38px;height:22px;border-radius:11px;background:#CBD5E6;position:relative;flex-shrink:0;cursor:pointer;transition:.15s;}
+.np-switch::after{content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:.15s;box-shadow:0 1px 2px rgba(0,0,0,.2);}
+.np-switch.on{background:var(--np-royal);}
+.np-switch.on::after{left:18px;}
+.np-toggle-row .t-lbl{display:flex;align-items:center;gap:7px;font-size:14.5px;font-weight:600;color:var(--np-ink);}
+
+/* images section (img1 style) */
+.np-img-gen{display:inline-flex;align-items:center;gap:7px;height:38px;padding:0 16px;border-radius:8px;
+  background:var(--blue);color:#fff;font-weight:600;font-size:13.5px;cursor:pointer;}
+.np-img-gen:hover{background:var(--blue-dark);}
+.np-img-gen .mi{font-size:16px;}
+.np-dropzone{border:1.5px dashed #C3CEE4;border-radius:12px;background:#FCFDFF;padding:26px;text-align:center;margin-bottom:18px;}
+.np-dz-cloud{width:46px;height:46px;border-radius:50%;background:#EAF1FF;color:var(--blue);display:inline-flex;align-items:center;justify-content:center;margin-bottom:10px;}
+.np-dz-cloud .mi{font-size:24px;}
+.np-dz-title{font-size:14px;color:var(--np-slate);margin-bottom:14px;}
+.np-dz-actions{display:flex;align-items:center;justify-content:center;gap:12px;}
+.np-dz-or{color:var(--np-slate);font-size:13px;}
+.np-link-btn{color:var(--blue);font-weight:600;font-size:13.5px;background:none;}
+.np-link-btn:hover{text-decoration:underline;}
+.np-addurl{display:block;margin:12px auto 0;color:var(--blue);font-weight:600;font-size:13.5px;}
+.np-thumbs{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.np-thumb{position:relative;aspect-ratio:1;border-radius:10px;background:#EBEDF2;display:flex;align-items:center;justify-content:center;}
+.np-thumb .mi.ph{font-size:42px;color:#C7CCD6;}
+.np-thumb .rm{position:absolute;top:8px;right:8px;width:26px;height:26px;border-radius:50%;background:#5B6B8C;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.np-thumb .rm .mi{font-size:16px;}
+.np-showall{display:block;text-align:center;margin-top:16px;color:var(--blue);font-weight:600;font-size:14px;}
+
+/* rich text editor mock */
+.np-editor{border:1px solid var(--np-line);border-radius:9px;overflow:hidden;background:#fff;}
+.np-ed-menubar{display:flex;gap:18px;padding:9px 12px;border-bottom:1px solid var(--np-line);font-size:13px;color:#42526E;}
+.np-ed-toolbar{display:flex;align-items:center;gap:6px;padding:8px 10px;border-bottom:1px solid var(--np-line);flex-wrap:wrap;}
+.np-ed-toolbar .mi{font-size:18px;color:#42526E;padding:4px;border-radius:5px;cursor:pointer;}
+.np-ed-toolbar .mi:hover{background:var(--np-soft);}
+.np-ed-pill{height:30px;border:1px solid var(--np-line);border-radius:6px;display:inline-flex;align-items:center;gap:6px;padding:0 9px;font-size:12.5px;color:#42526E;background:#fff;}
+.np-ed-sep{width:1px;height:20px;background:var(--np-line);margin:0 3px;}
+.np-ed-area{height:150px;background:#fff;}
+.np-ed-foot{display:flex;align-items:center;justify-content:space-between;padding:6px 12px;border-top:1px solid var(--np-line);font-size:12px;color:var(--np-slate);}
+
+/* info note */
+.np-note{display:flex;gap:12px;border:1px solid #C7D6F5;background:#EEF3FE;border-radius:10px;padding:16px 18px;margin-bottom:16px;}
+.np-note .mi{font-size:20px;color:#5878C7;flex-shrink:0;margin-top:1px;}
+.np-note p{font-size:13.5px;color:#3F4F73;line-height:1.55;}
+.np-empty{color:#9AA7C0;font-size:14px;margin-bottom:16px;}
+
+/* policies refresh */
+.np-refresh{color:var(--np-royal);font-size:16px;cursor:pointer;}
+.np-create-design{display:inline-flex;align-items:center;gap:6px;color:var(--blue);font-weight:600;font-size:13.5px;margin-top:14px;cursor:pointer;}
+.np-create-design .mi{font-size:15px;}
+.np-pill-cnt{font-size:12px;color:#9AA7C0;}
+.np-sku-wrap{display:flex;gap:10px;}
+.np-sku-input{flex:1;display:flex;align-items:center;border:1px solid var(--np-line);border-radius:9px;background:var(--np-field);padding:0 12px;}
+.np-sku-input input{flex:1;height:42px;border:none;outline:none;background:transparent;font-size:14px;font-family:inherit;}
+/* ============ GENERATE LISTING (Images→Listings) MODAL ============ */
+.gl-overlay{position:fixed;inset:0;background:rgba(23,43,77,.5);display:flex;align-items:center;justify-content:center;
+  padding:24px;opacity:0;visibility:hidden;transition:.2s;z-index:120;}
+.gl-overlay.open{opacity:1;visibility:visible;}
+.gl-modal{background:#fff;border-radius:14px;width:760px;max-width:100%;max-height:92vh;display:flex;flex-direction:column;
+  box-shadow:0 24px 60px rgba(23,43,77,.3);transform:translateY(12px);transition:.25s;}
+.gl-overlay.open .gl-modal{transform:translateY(0);}
+.gl-head{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--np-line);}
+.gl-head h2{font-size:21px;font-weight:700;color:#1A2233;}
+.gl-x{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#6B7280;}
+.gl-x:hover{background:#F3F4F6;}
+.gl-x .mi{font-size:24px;}
+.gl-body{padding:24px;overflow-y:auto;}
+.gl-sec-title{font-size:17px;font-weight:700;color:#1A2233;margin-bottom:6px;}
+.gl-sec-title .opt{color:#6B7280;font-weight:600;font-size:15px;}
+.gl-sec-desc{font-size:14px;color:#6B7280;line-height:1.5;margin-bottom:16px;}
+.gl-sec-desc b{color:#374151;}
+.gl-block{margin-bottom:26px;}
+.gl-depts{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+.gl-dept{display:flex;align-items:center;justify-content:center;gap:8px;height:52px;border:1px solid #D7DCE3;border-radius:9px;
+  background:#fff;color:#374151;font-size:15px;font-weight:600;cursor:pointer;}
+.gl-dept:hover{background:#F9FAFB;}
+.gl-dept.active{background:#EAF1FF;border-color:#9DBDF7;color:var(--blue);}
+.gl-dept .mi{font-size:19px;}
+.gl-settings{border:1px solid #D7DCE3;border-radius:12px;background:#FBFCFE;padding:20px;}
+.gl-settings-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px;}
+.gl-save-default{display:inline-flex;align-items:center;gap:7px;height:40px;padding:0 16px;border:1px solid #9DBDF7;border-radius:8px;
+  background:#fff;color:var(--blue);font-weight:600;font-size:14px;cursor:pointer;}
+.gl-save-default:hover{background:#F4F8FF;}
+.gl-save-default .mi{font-size:18px;}
+.gl-ci-label{font-size:16px;font-weight:700;color:#1A2233;margin-bottom:12px;}
+.gl-chips{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px;}
+.gl-chips .lead{font-size:14px;color:#6B7280;}
+.gl-chip{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 14px;border:1px solid #D7DCE3;border-radius:18px;
+  background:#fff;color:#374151;font-size:13.5px;font-weight:600;cursor:pointer;}
+.gl-chip:hover{background:#F0F5FF;border-color:#9DBDF7;color:var(--blue);}
+.gl-chip .mi{font-size:16px;}
+.gl-ta-wrap{position:relative;margin-bottom:6px;}
+.gl-textarea{width:100%;border:1px solid #D7DCE3;border-radius:10px;background:#fff;padding:14px;font-size:14px;
+  font-family:inherit;color:var(--ink);outline:none;resize:vertical;}
+.gl-textarea:focus{border-color:var(--blue);}
+.gl-count{position:absolute;right:14px;bottom:12px;font-size:13px;color:#9AA7C0;pointer-events:none;}
+.gl-foot{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-top:1px solid var(--np-line);}
+.gl-cancel{height:42px;padding:0 20px;border-radius:8px;background:#F3F4F6;color:#374151;font-weight:600;font-size:14px;}
+.gl-cancel:hover{background:#E5E7EB;}
+.gl-generate{display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 22px;border-radius:8px;background:var(--blue);
+  color:#fff;font-weight:600;font-size:15px;cursor:pointer;}
+.gl-generate:hover{background:var(--blue-dark);}
+.gl-generate .mi{font-size:19px;}
+
+/* ============ URLs → LISTINGS MODAL ============ */
+.ul-overlay{position:fixed;inset:0;background:rgba(23,43,77,.5);display:flex;align-items:center;justify-content:center;
+  padding:24px;opacity:0;visibility:hidden;transition:.2s;z-index:120;}
+.ul-overlay.open{opacity:1;visibility:visible;}
+.ul-modal{background:#fff;border-radius:14px;width:760px;max-width:100%;max-height:92vh;display:flex;flex-direction:column;
+  box-shadow:0 24px 60px rgba(23,43,77,.3);transform:translateY(12px);transition:.25s;}
+.ul-overlay.open .ul-modal{transform:translateY(0);}
+.ul-head{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--np-line);background:#FAFAFE;border-radius:14px 14px 0 0;}
+.ul-head h2{font-size:19px;font-weight:700;color:#6D28D9;}
+.ul-x{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#6B7280;}
+.ul-x:hover{background:#F3F4F6;}
+.ul-x .mi{font-size:22px;}
+.ul-body{padding:22px 24px;overflow-y:auto;}
+.ul-subtitle{font-size:18px;font-weight:700;color:#6D28D9;margin-bottom:10px;}
+.ul-desc{font-size:14.5px;color:#42526E;line-height:1.55;margin-bottom:18px;}
+.ul-card{border:1px solid var(--np-line);border-radius:12px;padding:18px;margin-bottom:20px;}
+.ul-supported{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-bottom:16px;}
+.ul-supported .lbl{font-weight:700;color:var(--np-ink);font-size:15px;}
+.ul-brand{display:inline-flex;align-items:center;gap:6px;font-weight:600;color:var(--np-ink);font-size:15px;}
+.ul-az{width:20px;height:20px;border-radius:4px;background:#FF9900;color:#111;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;}
+.ul-wm{width:18px;height:18px;border-radius:50%;background:#0071CE;color:#FFC220;font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center;}
+.ul-url-list{max-height:300px;overflow-y:auto;padding-right:4px;}
+.ul-url-row{display:flex;align-items:center;gap:14px;margin-bottom:12px;}
+.ul-num{width:36px;height:36px;border-radius:50%;border:1px solid #D7DCE3;color:#6B7280;display:flex;align-items:center;
+  justify-content:center;font-size:14px;font-weight:500;flex-shrink:0;}
+.ul-url-input{flex:1;height:46px;border:1px solid #D7DCE3;border-radius:8px;padding:0 14px;font-size:14px;font-family:inherit;
+  color:var(--ink);outline:none;background:#fff;}
+.ul-url-input::placeholder{color:#9AA7C0;}
+.ul-url-input:focus{border:2px solid var(--blue);padding:0 13px;}
+.ul-check-row{display:flex;align-items:center;gap:12px;margin-bottom:14px;font-size:15px;color:var(--np-ink);font-weight:500;}
+.ul-check{width:20px;height:20px;border:1.5px solid #C1C7D0;border-radius:4px;cursor:pointer;display:flex;align-items:center;
+  justify-content:center;background:#fff;flex-shrink:0;}
+.ul-check .mi{font-size:15px;color:#fff;display:none;}
+.ul-check.on{background:var(--blue);border-color:var(--blue);}
+.ul-check.on .mi{display:block;}
+.ul-tags-h{font-size:16px;font-weight:700;color:var(--np-ink);margin:18px 0 4px;}
+.ul-tags-desc{font-size:14px;color:#42526E;margin-bottom:12px;}
+.ul-foot{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 24px;border-top:1px solid var(--np-line);}
+.ul-credits .c1{font-size:14px;color:var(--np-ink);font-weight:500;display:flex;align-items:center;gap:6px;}
+.ul-credits .c2{font-size:13px;color:var(--np-slate);margin-top:3px;}
+.ul-foot-btns{display:flex;align-items:center;gap:10px;}
+.ul-cancel{height:44px;padding:0 22px;border-radius:8px;background:#fff;border:1px solid #C7D0DE;color:var(--blue);font-weight:600;font-size:14.5px;}
+.ul-cancel:hover{background:var(--np-soft);}
+.ul-create{height:44px;padding:0 22px;border-radius:8px;background:var(--blue);color:#fff;font-weight:600;font-size:14.5px;cursor:pointer;}
+.ul-create:hover{background:var(--blue-dark);}
+
+/* ============ TITLES → LISTINGS MODAL ============ */
+.tl-listing-card{border:1px solid var(--np-line);border-radius:12px;padding:18px;margin-bottom:18px;}
+.tl-listing-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.tl-listing-head h4{font-size:17px;font-weight:700;color:var(--np-ink);}
+.tl-listing-x{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;color:#6B7280;}
+.tl-listing-x:hover{background:#F3F4F6;}
+.tl-listing-x .mi{font-size:20px;}
+.tl-search-row{display:flex;gap:12px;margin-bottom:6px;}
+.tl-search-input{flex:1;height:46px;border:1px solid var(--np-line);border-radius:9px;background:var(--np-field);
+  padding:0 14px;font-size:14px;font-family:inherit;color:var(--ink);outline:none;}
+.tl-search-input::placeholder{color:#9AA7C0;}
+.tl-search-input:focus{border-color:var(--blue);background:#fff;}
+.tl-search-btn{height:46px;padding:0 22px;border:1px solid var(--np-line);border-radius:9px;background:#fff;
+  color:var(--np-ink);font-weight:600;font-size:14.5px;box-shadow:0 1px 3px rgba(23,43,77,.08);cursor:pointer;}
+.tl-search-btn:hover{background:var(--np-soft);}
+.tl-results{margin-top:10px;}
+.tl-result{display:flex;align-items:center;gap:16px;padding:12px 0;}
+.tl-thumb{width:96px;height:96px;border:1px solid var(--np-line);border-radius:8px;background:#F4F5F7;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.tl-thumb .mi{font-size:40px;color:#C7CCD6;}
+.tl-result .name{flex:1;font-size:15px;font-weight:600;color:var(--np-ink);line-height:1.45;}
+.tl-select{height:42px;padding:0 24px;border:1px solid #9DBDF7;border-radius:8px;background:#fff;color:var(--blue);
+  font-weight:600;font-size:14.5px;flex-shrink:0;cursor:pointer;}
+.tl-select:hover{background:#F4F8FF;}
+.tl-viewmore{display:block;margin:8px auto 0;height:42px;padding:0 22px;border:1px solid #9DBDF7;border-radius:8px;
+  background:#fff;color:var(--blue);font-weight:600;font-size:14.5px;cursor:pointer;}
+.tl-viewmore:hover{background:#F4F8FF;}
+.tl-add-listing{display:inline-flex;align-items:center;gap:8px;height:46px;padding:0 20px;border-radius:8px;
+  background:var(--blue);color:#fff;font-weight:600;font-size:15px;cursor:pointer;}
+.tl-add-listing:hover{background:var(--blue-dark);}
+.tl-add-listing .mi{font-size:20px;}
+
+/* ============ VARIATIONS SECTION ============ */
+.var-option{background:#F7F9FC;border:1px solid var(--np-line);border-radius:12px;padding:20px;margin-bottom:18px;}
+.var-value-row{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.var-drag{color:#AEB7C7;cursor:grab;font-size:22px;}
+.var-value-input{flex:1;background:#fff;}
+.var-trash{width:42px;height:42px;display:flex;align-items:center;justify-content:center;color:#6B7280;border-radius:8px;background:none;cursor:pointer;flex-shrink:0;}
+.var-trash:hover{background:#EDF0F5;color:var(--np-red);}
+.var-trash .mi{font-size:22px;}
+.var-add-value{display:inline-flex;align-items:center;gap:6px;color:var(--blue);font-weight:600;font-size:14.5px;cursor:pointer;margin-top:2px;}
+.var-add-value .mi{font-size:20px;}
+.var-divider{height:1px;background:var(--np-line);margin:18px 0;}
+.var-opt-foot{display:flex;align-items:center;justify-content:space-between;}
+.var-delete{height:40px;padding:0 18px;border-radius:8px;background:#EBECF0;color:#42526E;font-weight:600;font-size:14px;cursor:pointer;}
+.var-delete:hover{background:#DFE1E6;}
+.var-opt-foot .right{display:flex;align-items:center;gap:14px;}
+.var-saved{display:flex;align-items:center;gap:7px;color:#1A8754;font-weight:700;font-size:14.5px;}
+.var-saved .mi{font-size:20px;}
+.var-done{height:40px;padding:0 22px;border-radius:8px;background:var(--blue);color:#fff;font-weight:600;font-size:14px;cursor:pointer;}
+.var-done:hover{background:var(--blue-dark);}
+.var-add-option{display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 20px;border-radius:8px;background:#EBECF0;color:#42526E;font-weight:600;font-size:14.5px;cursor:pointer;margin-bottom:18px;}
+.var-add-option:hover{background:#DFE1E6;}
+.var-add-option .mi{font-size:20px;}
+.var-table-wrap{border-radius:14px;}
+.var-table{border:1px solid var(--np-line);border-radius:10px;overflow:hidden;background:#fff;}
+.var-toolbar{display:flex;align-items:center;justify-content:flex-end;gap:12px;padding:14px 16px;background:#FAFBFD;border-bottom:1px solid var(--np-line);}
+.var-tbtn{height:40px;padding:0 16px;border-radius:8px;background:#EBECF0;color:#42526E;font-weight:600;font-size:14px;cursor:pointer;}
+.var-tbtn:hover{background:#DFE1E6;}
+.var-edit-cols{display:inline-flex;align-items:center;gap:4px;color:var(--blue);font-weight:700;font-size:14.5px;cursor:pointer;}
+.var-edit-cols .mi{font-size:20px;}
+.var-th-row{display:flex;align-items:center;padding:14px 18px;border-bottom:1px solid var(--np-line);}
+.var-r-row{display:flex;align-items:center;padding:12px 18px;border-bottom:1px solid #EDF0F3;}
+.var-r-row:last-of-type{border-bottom:none;}
+.var-th{font-size:14px;font-weight:700;color:#42526E;display:flex;align-items:center;gap:6px;}
+.var-th .mi{font-size:18px;color:#7A8AA8;}
+.vc-chk{width:64px;}
+.vc-img{width:150px;}
+.vc-variant{flex:1;font-size:15px;font-weight:700;color:var(--np-ink);}
+.vc-price{width:200px;}
+.vc-qty{width:200px;}
+.var-vthumb{width:74px;height:74px;border-radius:8px;background:#F4F5F7;display:flex;align-items:center;justify-content:center;font-size:34px;}
+.var-cell-input{width:150px;height:44px;border:1px solid #C7D0DE;border-radius:8px;padding:0 14px;font-size:14px;font-family:inherit;color:var(--np-ink);outline:none;background:#fff;}
+.var-cell-input:focus{border-color:var(--blue);}
+.var-foot{display:flex;align-items:center;justify-content:flex-end;gap:18px;padding:12px 18px;border-top:1px solid var(--np-line);font-size:13.5px;color:var(--np-slate);}
+.var-foot .pg{display:inline-flex;align-items:center;gap:6px;}
+.var-edit-cols-wrap{position:relative;display:inline-block;}
+.vec-menu{position:absolute;top:38px;right:0;min-width:210px;background:#fff;border:1px solid var(--np-line);
+  border-radius:10px;box-shadow:0 12px 30px rgba(23,43,77,.18);padding:10px;z-index:60;display:none;}
+.vec-menu.open{display:block;}
+.vec-item{display:flex;align-items:center;gap:12px;padding:9px 10px;border-radius:8px;cursor:pointer;
+  font-size:15px;color:var(--np-ink);font-weight:500;}
+.vec-item:hover{background:var(--np-soft);}
+.vec-box{width:22px;height:22px;border-radius:5px;border:2px solid #C1C7D0;background:#fff;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.vec-box .mi{font-size:16px;color:#fff;display:none;}
+.vec-item.on .vec-box{background:var(--blue);border-color:var(--blue);}
+.vec-item.on .vec-box .mi{display:block;}
+.var-th-row .cbx,.var-r-row .cbx{display:inline-block;vertical-align:middle;cursor:pointer;}
+.cbx.on{background:var(--blue);border-color:var(--blue);position:relative;}
+.cbx.on::after{content:"";position:absolute;left:4px;top:1px;width:5px;height:9px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg);}
+
+/* ===== ITEM SPECIFICS / CUSTOM SPECIFICS ===== */
+.spec-note{font-size:13.5px;color:var(--np-slate);margin:-2px 0 16px;}
+.cs-row{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.cs-name{width:240px;flex-shrink:0;}
+.cs-val{flex:1;}
+.cs-x{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--blue);background:none;cursor:pointer;flex-shrink:0;}
+.cs-x:hover{background:var(--np-soft);}
+.cs-x .mi{font-size:22px;}
+
+/* ===== COMPATIBILITY ===== */
+.compat-scroll{overflow-x:auto;}
+.compat-table{border:1px solid var(--np-line);border-radius:10px;overflow:hidden;min-width:880px;}
+.compat-h,.compat-r{display:flex;align-items:center;}
+.compat-h{background:#F4F6FB;border-bottom:1px solid var(--np-line);}
+.compat-h>div{padding:12px 14px;font-size:13px;font-weight:700;color:#42526E;}
+.compat-r{border-bottom:1px solid #EDF0F3;}
+.compat-r:last-child{border-bottom:none;}
+.compat-r>div{padding:10px 14px;}
+.cc-year{width:120px;}.cc-make{width:150px;}.cc-model{width:170px;}.cc-sub{width:140px;}.cc-note{flex:1;min-width:120px;}
+.cc-act{width:200px;display:flex;gap:8px;justify-content:flex-end;}
+.compat-r .np-select select{height:40px;}
+.compat-r .np-input{height:40px;}
+.compat-dup{height:36px;padding:0 14px;border:1px solid #9DBDF7;border-radius:7px;background:#fff;color:var(--blue);font-weight:600;font-size:13.5px;cursor:pointer;}
+.compat-dup:hover{background:#F4F8FF;}
+.compat-del{height:36px;padding:0 14px;border:1px solid #F1A9A9;border-radius:7px;background:#fff;color:#D7322B;font-weight:600;font-size:13.5px;cursor:pointer;}
+.compat-del:hover{background:#FDF3F3;}
+.compat-add{display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 18px;border-radius:8px;background:#EBECF0;color:#42526E;font-weight:600;font-size:14px;cursor:pointer;}
+.compat-add:hover{background:#DFE1E6;}
+.compat-add .mi{font-size:20px;}
+
+/* ===== ITEM DISCLOSURES ===== */
+.disc-row{display:flex;gap:16px;margin-bottom:22px;}
+.disc-row:last-child{margin-bottom:0;}
+.disc-label{width:184px;flex-shrink:0;text-align:right;font-size:14px;font-weight:700;color:var(--np-ink);padding-top:2px;display:flex;justify-content:flex-end;align-items:center;gap:6px;}
+.disc-main{flex:1;min-width:0;}
+.disc-line{display:flex;align-items:center;gap:12px;}
+.disc-desc{font-size:14px;color:#42526E;}
+.disc-card{border:1px solid var(--np-line);border-radius:10px;padding:16px 18px;margin-top:12px;max-width:600px;}
+.disc-mfr{display:flex;align-items:flex-start;gap:48px;}
+.disc-mfr .lbl{font-weight:700;color:var(--np-ink);font-size:14px;}
+.disc-mfr-actions{margin-left:auto;display:flex;gap:12px;}
+.disc-edit{color:var(--blue);cursor:pointer;}.disc-edit .mi{font-size:20px;}
+.disc-del{color:var(--np-red);cursor:pointer;}.disc-del .mi{font-size:20px;}
+.disc-sub-card{border:1px solid var(--np-line);border-radius:10px;padding:14px 16px;margin:4px 0 16px;}
+.disc-sub-head{display:flex;align-items:center;justify-content:space-between;}
+.disc-sub-head h5{font-size:16px;font-weight:700;color:var(--np-ink);}
+.disc-count{text-align:right;font-size:13px;color:var(--np-slate);margin-top:5px;}
+.disc-add-doc{display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 18px;border-radius:8px;background:#EBECF0;color:#42526E;font-weight:600;font-size:14px;cursor:pointer;margin-top:12px;}
+.disc-add-doc:hover{background:#DFE1E6;}
+.disc-add-doc .mi{font-size:20px;}
+
+/* ===== ADD DOCUMENT MODAL ===== */
+.dm-overlay{position:fixed;inset:0;background:rgba(23,43,77,.5);display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;visibility:hidden;transition:.2s;z-index:130;}
+.dm-overlay.open{opacity:1;visibility:visible;}
+.dm-modal{background:#fff;border-radius:12px;width:480px;max-width:100%;box-shadow:0 24px 60px rgba(23,43,77,.3);transform:translateY(10px);transition:.25s;}
+.dm-overlay.open .dm-modal{transform:translateY(0);}
+.dm-head{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid var(--np-line);}
+.dm-head h2{font-size:19px;font-weight:700;color:#1A2233;}
+.dm-x{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#6B7280;}
+.dm-x:hover{background:#F3F4F6;}.dm-x .mi{font-size:22px;}
+.dm-body{padding:20px 22px;}
+.dm-upload{width:100%;height:44px;border-radius:8px;background:#EBECF0;color:#9AA7C0;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:6px;cursor:not-allowed;}
+.dm-upload .mi{font-size:20px;}
+.dm-hint{font-size:13px;color:var(--np-slate);margin-top:10px;}
+.dm-foot{display:flex;align-items:center;justify-content:flex-end;gap:10px;padding:14px 22px;border-top:1px solid var(--np-line);}
+.dm-save{height:40px;padding:0 22px;border-radius:8px;background:var(--blue);color:#fff;font-weight:600;font-size:14px;cursor:pointer;}
+.dm-save:hover{background:var(--blue-dark);}
+.dm-cancel{height:40px;padding:0 20px;border-radius:8px;background:#EBECF0;color:#42526E;font-weight:600;font-size:14px;cursor:pointer;}
+.dm-cancel:hover{background:#DFE1E6;}
+
+.ai-badge{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 9px;border-radius:11px;
+  background:linear-gradient(90deg,#7C3AED,#4C7BE2);color:#fff;font-size:12px;font-weight:700;margin-left:10px;vertical-align:middle;}
+.ai-badge .mi{font-size:14px;}
+
+@media (max-width:1080px){
+  .np-card-body{flex-direction:column;}
+  .np-aside{width:auto;border-left:none;border-top:1px solid var(--np-line);}
+  .np-grid2{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <!-- SIDEBAR -->
+  <aside class="side">
+    <div class="side-logo">
+      <div class="row" style="gap:12px;">
+        <div class="logo-badge"><span class="mi">hub</span></div>
+        <div class="logo-txt"><b>Marketplace</b><b>Integration</b></div>
+      </div>
+      <div class="collapse"><span class="mi">chevron_left</span></div>
+    </div>
+
+    <div class="acct">
+      <span class="mi lead">cloud</span>
+      <span class="name">LitCommerce Main ...</span>
+      <span class="mi exp">expand_more</span>
+    </div>
+
+    <nav class="nav">
+      <div class="nav-item"><span class="mi">dashboard</span><span class="lbl">Dashboard</span></div>
+      <div class="nav-item"><span class="mi">cloud_queue</span><span class="lbl">All Products</span></div>
+      <div class="nav-item"><span class="mi">list</span><span class="lbl">Add/Manage Sales Channels</span></div>
+
+      <div class="subwrap">
+        <div class="sub-item active"><span class="ch-ico"><span class="ebay" style="font-size:13px;"><span class="e">e</span><span class="b">b</span><span class="a">a</span><span class="y">y</span></span></span><span class="lbl">ezee</span></div>
+        <div class="sub-item"><span class="ch-ico"><span class="ebay" style="font-size:13px;"><span class="e">e</span><span class="b">b</span><span class="a">a</span><span class="y">y</span></span></span><span class="lbl">usa-outlets</span></div>
+        <div class="sub-item"><span class="ch-ico" style="background:#FF9900;color:#000;">a</span><span class="lbl">Ezee Amazon</span></div>
+        <div class="sub-item"><span class="ch-ico" style="background:#0071CE;color:#FFC220;border-radius:50%;">✶</span><span class="lbl">Walmart</span></div>
+      </div>
+
+      <div style="margin-top:4px;">
+        <div class="nav-item"><span class="mi">schedule</span><span class="lbl">Automated Listings</span></div>
+        <div class="nav-item"><span class="mi">shopping_cart</span><span class="lbl">Orders</span></div>
+        <div class="nav-item"><span class="mi">description</span><span class="lbl">Templates &amp; Rules</span></div>
+        <div class="nav-item"><span class="mi">workspace_premium</span><span class="lbl">Subscription Plan</span></div>
+      </div>
+    </nav>
+
+    <div class="side-foot">
+      <div class="nav-item"><span class="mi">help_outline</span><span class="lbl">Help &amp; Request</span></div>
+      <div class="foot-row">
+        <div class="avatar">EE</div>
+        <span class="mi" style="font-size:18px;color:var(--sub);">expand_more</span>
+        <div style="flex:1;"></div>
+        <div class="badge"><span class="mi" style="font-size:20px;color:var(--sub);">task_alt</span><span class="greendot"></span></div>
+        <div class="badge"><span class="mi" style="font-size:20px;color:var(--sub);">notifications</span><span class="dot">75</span></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="head">
+      <div class="head-left">
+        <div class="ebay-box"><span class="ebay" style="font-size:22px;"><span class="e">e</span><span class="b">b</span><span class="a">a</span><span class="y">y</span></span></div>
+        <div>
+          <div class="h-title">eBay Listings - ezee</div>
+          <div class="h-sub">Price Sync: <span class="off">Off</span>&nbsp;&nbsp;&nbsp;Inventory Sync: <span class="on">On</span></div>
+        </div>
+      </div>
+      <div class="actions">
+        <div class="menu-wrap">
+          <button class="btn btn-teal-outline" id="addBtn">
+            <span class="mi">add</span>Add New Product<span class="mi">expand_more</span>
+          </button>
+          <div class="menu" id="addMenu">
+            <div class="menu-item manual" id="addManual"><span class="mi">note_add</span><span class="mtxt">Add Product Manually</span></div>
+            <div class="menu-sep"></div>
+            <div class="menu-ai-label"><span class="mi">auto_awesome</span><span>Create with AI</span></div>
+            <div class="menu-item ai" id="addImages"><span class="mi">image</span><span class="mtxt">Images to Listings</span></div>
+            <div class="menu-item ai" id="addUrls"><span class="mi">link</span><span class="mtxt">URLs to Listings</span></div>
+            <div class="menu-item ai" id="addTitles"><span class="mi">title</span><span class="mtxt">Title to Listings</span></div>
+          </div>
+        </div>
+        <button class="btn btn-primary"><span class="mi">bolt</span>Quick/Auto List to eBay</button>
+        <button class="btn btn-outline"><span class="mi">file_download</span>Import from eBay</button>
+        <button class="btn btn-outline">More Actions<span class="mi">expand_more</span></button>
+        <button class="btn btn-outline"><span class="mi">settings</span>Channel Settings</button>
+      </div>
+    </div>
+
+    <div class="search-row">
+      <div class="field f-grow"><span class="mi">search</span><input placeholder="Search Products" /></div>
+      <div class="field f-sku"><input placeholder="Search SKU" /></div>
+      <button class="btn btn-outline">Link Status<span class="mi">expand_more</span></button>
+      <button class="btn btn-primary" style="padding:0 24px;">Search</button>
+      <button class="btn btn-disabled" style="font-weight:500;">Clear</button>
+      <button class="btn btn-outline" style="font-weight:500;">Sort by<span class="mi">expand_more</span></button>
+      <button class="btn btn-outline" style="font-weight:500;">More Filters</button>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active"><span class="t-lbl">Active</span><span class="pill pill-blue">1162</span></div>
+      <div class="tab"><span class="t-lbl">Ended</span><span class="pill pill-grey">387</span></div>
+    </div>
+
+    <!-- TOOLBAR: NEW BUTTON ADDED HERE (far left) -->
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <button class="btn btn-disabled btn-sm" style="font-weight:500;">Apply Template/Rules<span class="mi">expand_more</span></button>
+        <button class="btn btn-primary btn-sm">Select Action<span class="mi">expand_more</span></button>
+      </div>
+      <div class="toolbar-right">
+        <div class="viewtoggle">
+          <button class="on"><span class="mi">format_list_bulleted</span></button>
+          <button><span class="mi">grid_view</span></button>
+        </div>
+        <button class="btn btn-outline btn-sm" style="font-weight:500;"><span class="mi">view_column</span>Columns</button>
+        <button class="btn btn-outline btn-sm" style="font-weight:500;"><span class="mi">edit</span>Multi Edit Mode</button>
+      </div>
+    </div>
+
+    <div class="sel-row">
+      <span class="c">0 listing selected</span>
+      <span class="all"><span class="cbx"></span>Select all 1162 filtered listings</span>
+    </div>
+
+    <div class="table">
+      <div class="t-head">
+        <div class="c-chk"><span class="cbx"></span></div>
+        <div class="c-img"></div>
+        <div class="c-link"><span class="help-q">?</span></div>
+        <div class="c-status th">Status</div>
+        <div class="c-name th">Name</div>
+        <div class="c-sku th">SKU</div>
+        <div class="c-qty th">Quantity</div>
+      </div>
+      <div id="rows"></div>
+    </div>
+
+    <div class="pager">
+      <div class="row" style="gap:8px;"><span class="lbl">Rows per page:</span><button class="mini-btn">25<span class="mi">expand_more</span></button></div>
+      <div class="row" style="gap:8px;"><span class="lbl">Page:</span><button class="mini-btn">1<span class="mi">expand_more</span></button></div>
+      <span class="lbl">1-25 of 1162</span>
+      <div class="pg-arrows"><button class="off"><span class="mi">chevron_left</span></button><button><span class="mi">chevron_right</span></button></div>
+    </div>
+  </main>
+</div>
+
+<!-- ============ ADD NEW PRODUCT DRAWER ============ -->
+<div class="np-overlay" id="npOverlay">
+  <aside class="np-drawer" role="dialog" aria-label="Add New Product">
+    <div class="np-head">
+      <div class="np-head-left">
+        <button class="np-close" id="npClose"><span class="mi">close</span></button>
+        <h2>Add New Product</h2>
+      </div>
+    </div>
+
+    <div class="np-body">
+      <!-- section nav rail -->
+      <nav class="np-nav" id="npNav">
+        <div class="np-nav-item active" data-target="sec-images"><span class="mi">image</span>Images<span class="req-dot"></span></div>
+        <div class="np-nav-item" data-target="sec-item"><span class="mi">info</span>Item Information<span class="req-dot"></span></div>
+        <div class="np-nav-item" data-target="sec-identifiers"><span class="mi">qr_code_2</span>Identifiers</div>
+        <div class="np-nav-item" data-target="sec-description"><span class="mi">notes</span>Description<span class="req-dot"></span></div>
+        <div class="np-nav-item" data-target="sec-required"><span class="mi">rule</span>Required Specifics</div>
+        <div class="np-nav-item" data-target="sec-recommended"><span class="mi">recommend</span>Recommended Specifics</div>
+        <div class="np-nav-item" data-target="sec-optional"><span class="mi">list_alt</span>Optional Specifics</div>
+        <div class="np-nav-item" data-target="sec-custom"><span class="mi">tune</span>Custom Specifics</div>
+        <div class="np-nav-item" data-target="sec-compatibility"><span class="mi">directions_car</span>Compatibility</div>
+        <div class="np-nav-item" data-target="sec-pricing"><span class="mi">sell</span>Pricing<span class="req-dot"></span></div>
+        <div class="np-nav-item" data-target="sec-inventory"><span class="mi">inventory_2</span>Inventory</div>
+        <div class="np-nav-item" data-target="sec-variations"><span class="mi">style</span>Variations</div>
+        <div class="np-nav-item" data-target="sec-disclosures"><span class="mi">verified_user</span>Item Disclosures</div>
+      </nav>
+
+      <!-- scrollable form -->
+      <div class="np-content" id="npContent">
+
+        <!-- 1. IMAGES (img1 style, first section) -->
+        <section class="np-card" id="sec-images">
+          <div class="np-card-head">
+            <h3>Images <span style="color:var(--np-red);">*</span></h3>
+            <button class="np-img-gen"><span class="mi">auto_awesome</span>Generate Listing (5 Credit)</button>
+          </div>
+          <div class="np-card-body">
+            <div class="np-main">
+              <p class="np-hint" style="margin:-4px 0 16px;">Set the primary image by arranging image order</p>
+              <div class="np-dropzone">
+                <div class="np-dz-cloud"><span class="mi">cloud_upload</span></div>
+                <div class="np-dz-title">Drag &amp; Drop images here</div>
+                <div class="np-dz-actions">
+                  <button class="np-btn np-btn-royal" style="height:38px;">Upload New</button>
+                  <span class="np-dz-or">or</span>
+                  <button class="np-btn np-btn-ghost" style="height:38px;">Select from Library</button>
+                </div>
+                <a class="np-addurl">Add from URL</a>
+              </div>
+              <div class="np-thumbs">
+                <div class="np-thumb"><span class="mi ph">image</span><span class="rm"><span class="mi">close</span></span></div>
+                <div class="np-thumb"><span class="mi ph">image</span><span class="rm"><span class="mi">close</span></span></div>
+                <div class="np-thumb"><span class="mi ph">image</span><span class="rm"><span class="mi">close</span></span></div>
+              </div>
+              <a class="np-showall">Show all</a>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. ITEM INFORMATION (img2/3) -->
+        <section class="np-card" id="sec-item">
+          <div class="np-card-head"><h3>Item Information</h3><span class="mi">expand_more</span></div>
+          <div class="np-card-body">
+            <div class="np-main">
+              <div class="np-field-row">
+                <div class="np-label">Title <span class="np-info">i</span><span class="req">Required</span></div>
+                <input class="np-input err" placeholder="" />
+                <div class="np-err-txt">This field is required.</div>
+              </div>
+              <div class="np-toggle-row">
+                <div class="np-switch"></div>
+                <span class="t-lbl">Bold Title <span class="np-info">i</span></span>
+              </div>
+              <div class="np-field-row">
+                <div class="np-label">Sub Title <span class="np-info">i</span></div>
+                <input class="np-input" placeholder="" />
+              </div>
+              <div class="np-field-row">
+                <div class="np-label">Category</div>
+                <div class="np-input-ai">
+                  <div class="np-select"><select><option>Search Category</option></select><span class="mi">expand_more</span></div>
+                  <button class="np-icon-btn"><span class="mi">search</span></button>
+                </div>
+              </div>
+              <div class="np-toggle-row">
+                <div class="np-switch"></div>
+                <span class="t-lbl">Send Second eBay Category <span class="np-info">i</span></span>
+              </div>
+              <div class="np-grid2">
+                <div><div class="np-label">Store Category</div><div class="np-select"><select><option>Store Category</option></select><span class="mi">expand_more</span></div></div>
+                <div><div class="np-label">2nd Store Category</div><div class="np-select"><select><option>2nd Store Category</option></select><span class="mi">expand_more</span></div></div>
+              </div>
+            </div>
+            <aside class="np-aside">
+              <div class="np-field-row">
+                <div class="np-label">Channel SKU <span class="mi" style="font-size:15px;color:var(--np-slate);">link</span><span class="req">Required</span></div>
+                <div class="np-sku-wrap">
+                  <div class="np-sku-input"><input placeholder="Create SKU..." /><span class="np-pill-cnt">0 / 20</span></div>
+                  <button class="np-btn np-btn-royal">Generate SKU</button>
+                </div>
+              </div>
+              <div class="np-sub-h">Policies <span class="mi np-refresh">refresh</span></div>
+              <div class="np-field-row"><div class="np-label">Shipping Policy</div><div class="np-select"><select><option>Policy</option></select><span class="mi">expand_more</span></div></div>
+              <div class="np-field-row"><div class="np-label">Payment Policy</div><div class="np-select"><select><option>Policy</option></select><span class="mi">expand_more</span></div></div>
+              <div class="np-field-row" style="margin-bottom:0;"><div class="np-label">Return Policy</div><div class="np-select"><select><option>Policy</option></select><span class="mi">expand_more</span></div></div>
+            </aside>
+          </div>
+        </section>
+
+        <!-- 3. IDENTIFIERS (img4) -->
+        <section class="np-card" id="sec-identifiers">
+          <div class="np-card-head"><h3>Identifiers</h3><span class="mi">expand_more</span></div>
+          <div class="np-card-body">
+            <div class="np-main">
+              <div class="np-grid2">
+                <div><div class="np-label">Product Identifier (UPC) <span class="np-info">i</span></div><input class="np-input" /></div>
+                <div><div class="np-label">Product Identifier (EAN) <span class="np-info">i</span></div><input class="np-input" /></div>
+                <div><div class="np-label">Product Identifier (ISBN)</div><input class="np-input" /></div>
+                <div><div class="np-label">Product Identifier (MPN) <span class="np-info">i</span></div><input class="np-input" /></div>
+              </div>
+            </div>
+            <aside class="np-aside">
+              <div class="np-sub-h">eBay Catalog <span class="np-info">i</span></div>
+              <div class="np-field-row"><div class="np-label">ePID (eBay Product ID)</div><input class="np-input" /></div>
+              <button class="np-btn np-btn-ghost" style="width:100%;justify-content:center;color:var(--np-royal);border-color:var(--np-royal);"><span class="mi">search</span>Search Catalog</button>
+            </aside>
+          </div>
+        </section>
+
+        <!-- 4. DESCRIPTION (img6) -->
+        <section class="np-card" id="sec-description">
+          <div class="np-card-head"><h3>Description</h3><span class="mi">expand_more</span></div>
+          <div class="np-card-body">
+            <div class="np-main">
+              <div class="np-field-row">
+                <div class="np-label"><span>Description <span class="req">Required</span></span></div>
+                <div class="np-editor">
+                  <div class="np-ed-menubar"><span>File</span><span>Edit</span><span>View</span><span>Insert</span><span>Format</span><span>Tools</span><span>Table</span></div>
+                  <div class="np-ed-toolbar">
+                    <span class="mi">undo</span><span class="mi">redo</span><span class="np-ed-sep"></span>
+                    <span class="np-ed-pill">Paragraph <span class="mi" style="padding:0;">expand_more</span></span>
+                    <span class="np-ed-pill">Montserrat <span class="mi" style="padding:0;">expand_more</span></span>
+                    <span class="np-ed-pill">12pt <span class="mi" style="padding:0;">expand_more</span></span>
+                    <span class="np-ed-sep"></span>
+                    <span class="mi">format_bold</span><span class="mi">format_italic</span><span class="mi">format_underlined</span><span class="mi">strikethrough_s</span>
+                    <span class="np-ed-sep"></span>
+                    <span class="mi">format_align_left</span><span class="mi">format_align_center</span><span class="mi">format_align_right</span><span class="mi">format_align_justify</span>
+                    <span class="mi">more_horiz</span>
+                  </div>
+                  <div class="np-ed-area"></div>
+                  <div class="np-ed-foot"><span>p</span><span>0 words</span></div>
+                </div>
+              </div>
+              <div class="np-field-row">
+                <div class="np-label"><span>Mobile Description <span class="np-info">i</span></span></div>
+                <div class="np-editor">
+                  <div class="np-ed-menubar"><span>File</span><span>Edit</span><span>View</span><span>Insert</span><span>Format</span><span>Tools</span><span>Table</span></div>
+                  <div class="np-ed-toolbar">
+                    <span class="mi">undo</span><span class="mi">redo</span><span class="np-ed-sep"></span>
+                    <span class="np-ed-pill">Paragraph <span class="mi" style="padding:0;">expand_more</span></span>
+                    <span class="np-ed-pill">Montserrat <span class="mi" style="padding:0;">expand_more</span></span>
+                    <span class="np-ed-pill">12pt <span class="mi" style="padding:0;">expand_more</span></span>
+                    <span class="np-ed-sep"></span>
+                    <span class="mi">format_bold</span><span class="mi">format_italic</span><span class="mi">format_underlined</span><span class="mi">strikethrough_s</span>
+                    <span class="np-ed-sep"></span>
+                    <span class="mi">format_align_left</span><span class="mi">format_align_center</span><span class="mi">format_align_right</span><span class="mi">format_align_justify</span>
+                    <span class="mi">more_horiz</span>
+                  </div>
+                  <div class="np-ed-area" style="height:110px;"></div>
+                  <div class="np-ed-foot"><span>p</span><span>0 words</span></div>
+                </div>
+              </div>
+              <div class="np-field-row">
+                <div class="np-label"><span>Meta Tags (Keywords) <span class="np-info">i</span></span></div>
+                <input class="np-input" />
+              </div>
+              <div class="np-field-row" style="margin-bottom:0;">
+                <div class="np-label"><span>Meta Description <span class="np-info">i</span></span></div>
+                <textarea class="np-textarea"></textarea>
+              </div>
+            </div>
+            <aside class="np-aside">
+              <div class="np-sub-h">Listing Design <span class="np-info">i</span></div>
+              <div class="np-field-row">
+                <div class="np-label">Design Template <span class="opt">Optional</span></div>
+                <div class="np-input-ai">
+                  <div class="np-select"><select><option>None</option></select><span class="mi">expand_more</span></div>
+                  <button class="np-icon-btn"><span class="mi">visibility</span></button>
+                </div>
+              </div>
+              <a class="np-create-design">Create New Design <span class="mi">open_in_new</span></a>
+            </aside>
+          </div>
+        </section>
+
+        <!-- 5a. REQUIRED ITEM SPECIFICS -->
+        <section class="np-card" id="sec-required">
+          <div class="np-card-head"><h3>Required Item Specifics</h3><span class="mi">expand_more</span></div>
+          <div class="np-card-body"><div class="np-main">
+            <p class="spec-note">These specifics are required by eBay to publish a listing in this category.</p>
+            <div class="np-grid2">
+              <div><div class="np-label">Brand <span class="req">Required</span></div><input class="np-input" /></div>
+              <div><div class="np-label">Type <span class="req">Required</span></div><input class="np-input" /></div>
+              <div><div class="np-label">Manufacturer Part Number <span class="req">Required</span></div><input class="np-input" /></div>
+              <div><div class="np-label">Country/Region of Manufacture <span class="req">Required</span></div><div class="np-select"><select><option>Select</option></select><span class="mi">expand_more</span></div></div>
+            </div>
+          </div></div>
+        </section>
+
+        <!-- 5b. RECOMMENDED ITEM SPECIFICS -->
+        <section class="np-card" id="sec-recommended">
+          <div class="np-card-head"><h3>Recommended Item Specifics</h3><span class="mi">expand_more</span></div>
+          <div class="np-card-body"><div class="np-main">
+            <p class="spec-note">Adding these helps your listing show up in more buyer searches.</p>
+            <div class="np-grid2">
+              <div><div class="np-label">Color</div><input class="np-input" /></div>
+              <div><div class="np-label">Material</div><input class="np-input" /></div>
+              <div><div class="np-label">Department</div><div class="np-select"><select><option>Select</option></select><span class="mi">expand_more</span></div></div>
+              <div><div class="np-label">Features</div><input class="np-input" /></div>
+            </div>
+          </div></div>
+        </section>
+
+        <!-- 5c. OPTIONAL ITEM SPECIFICS -->
+        <section class="np-card" id="sec-optional">
+          <div class="np-card-head"><h3>Optional Item Specifics</h3><span class="mi">expand_more</span></div>
+          <div class="np-card-body"><div class="np-main">
+            <p class="spec-note">Add any additional details buyers may search for.</p>
+            <div class="np-grid2">
+              <div><div class="np-label">Model</div><input class="np-input" /></div>
+              <div><div class="np-label">Size</div><input class="np-input" /></div>
+              <div><div class="np-label">Style</div><input class="np-input" /></div>
+              <div><div class="np-label">Pattern</div><input class="np-input" /></div>
+            </div>
+          </div></div>
+        </section>
+
+        <!-- 5d. CUSTOM SPECIFICS -->
+        <section class="np-card" id="sec-custom">
+          <div class="np-card-head"><h3>Custom Specifics</h3><span class="mi">expand_more</span></div>
+          <div class="np-card-body"><div class="np-main">
+            <div class="np-note">
+              <span class="mi">error_outline</span>
+              <p>Here, you can include custom item specifics to your eBay listings. This means you can add any details that you want to the listing. For example, if the suggested item specifics for your product category doesn't include length, you can add "Length" as a custom item specific.<br><b>Note:</b> if the mapped custom specifics have an empty value, we will not include it in the listing.</p>
+            </div>
+            <div id="csRows"></div>
+            <div class="np-empty" id="csEmpty">You don't have any custom item specifics.</div>
+            <button class="np-btn np-btn-royal" id="csAdd"><span class="mi">add_circle_outline</span>Add New Specific</button>
+          </div></div>
+        </section>
+
+        <!-- 5e. COMPATIBILITY -->
+        <section class="np-card" id="sec-compatibility">
+          <div class="np-card-head"><h3>Compatibility</h3><span class="mi">expand_more</span></div>
+          <div class="np-card-body"><div class="np-main">
+            <div class="np-note">
+              <span class="mi">error_outline</span>
+              <p>Compatibility is available for categories such as Vehicle Parts &amp; Accessories. Add the vehicles your item fits below.</p>
+            </div>
+            <div class="compat-scroll">
+              <div class="compat-table" id="compatTable">
+                <div class="compat-h">
+                  <div class="cc-year">Year</div><div class="cc-make">Make</div><div class="cc-model">Model</div><div class="cc-sub">Submodel</div><div class="cc-note">Note</div><div class="cc-act"></div>
+                </div>
+                <div class="compat-r">
+                  <div class="cc-year"><div class="np-select"><select><option>2017</option></select><span class="mi">expand_more</span></div></div>
+                  <div class="cc-make"><div class="np-select"><select><option>Arctic Cat</option></select><span class="mi">expand_more</span></div></div>
+                  <div class="cc-model"><div class="np-select"><select><option>Alterra TRV 1000</option></select><span class="mi">expand_more</span></div></div>
+                  <div class="cc-sub"><div class="np-select"><select><option>4x4 XT EPS</option></select><span class="mi">expand_more</span></div></div>
+                  <div class="cc-note"><input class="np-input" value="sss" /></div>
+                  <div class="cc-act"><button class="compat-dup" data-compdup>Duplicate</button><button class="compat-del" data-compdel>Delete</button></div>
+                </div>
+                <div class="compat-r">
+                  <div class="cc-year"><div class="np-select"><select><option>2017</option></select><span class="mi">expand_more</span></div></div>
+                  <div class="cc-make"><div class="np-select"><select><option>Arctic Cat</option></select><span class="mi">expand_more</span></div></div>
+                  <div class="cc-model"><div class="np-select"><select><option>Alterra TRV 1000</option></select><span class="mi">expand_more</span></div></div>
+                  <div class="cc-sub"><div class="np-select"><select><option>4x4 XT EPS</option></select><span class="mi">expand_more</span></div></div>
+                  <div class="cc-note"><input class="np-input" value="sss" /></div>
+                  <div class="cc-act"><button class="compat-dup" data-compdup>Duplicate</button><button class="compat-del" data-compdel>Delete</button></div>
+                </div>
+              </div>
+            </div>
+            <button class="compat-add" id="compatAdd" style="margin-top:14px;"><span class="mi">add</span>Add Compatibility</button>
+          </div></div>
+        </section>
+
+        <!-- 6. PRICING (img8/9) -->
+        <section class="np-card" id="sec-pricing">
+          <div class="np-card-head"><h3>Pricing</h3><span class="mi">expand_more</span></div>
+          <div class="np-card-body">
+            <div class="np-main">
+              <div class="np-field-row">
+                <div class="np-label">Listing Type</div>
+                <div class="np-select"><select><option>Fixed Price</option></select><span class="mi">expand_more</span></div>
+              </div>
+              <div class="np-grid2" style="align-items:start;">
+                <div>
+                  <div class="np-label">Listing Price (USD) <span class="req">Required</span></div>
+                  <input class="np-input err" />
+                  <div class="np-err-txt">Price have to be greater than 0.</div>
+                </div>
+                <div>
+                  <div class="np-label">Retail Price</div>
+                  <input class="np-input" />
+                </div>
+              </div>
+              <div class="np-toggle-row" style="margin-top:4px;">
+                <div class="np-switch"></div><span class="t-lbl">Best Offer <span class="np-info">i</span></span>
+              </div>
+              <div class="np-sub-h" style="margin-top:6px;">Additional Pricing Settings</div>
+              <div class="np-toggle-row"><div class="np-switch"></div><span class="t-lbl">Private Listing <span class="np-info">i</span></span></div>
+              <div class="np-toggle-row"><div class="np-switch"></div><span class="t-lbl">Volume Pricing <span class="np-info">i</span></span></div>
+              <p class="np-hint">eBay may charge fees for this feature, based on listing region.</p>
+            </div>
+            <aside class="np-aside">
+              <div class="np-sub-h">Repricer Pricing Fields</div>
+              <div class="np-field-row"><div class="np-label">Floor Price <span class="np-info">i</span></div><input class="np-input" /></div>
+              <div class="np-field-row" style="margin-bottom:0;"><div class="np-label">Ceiling Price <span class="np-info">i</span></div><input class="np-input" /></div>
+            </aside>
+          </div>
+        </section>
+
+        <!-- 7. INVENTORY (img10/11) -->
+        <section class="np-card" id="sec-inventory">
+          <div class="np-card-head"><h3>Inventory</h3><span class="mi">expand_more</span></div>
+          <div class="np-card-body">
+            <div class="np-main">
+              <div class="np-field-row" style="max-width:300px;">
+                <div class="np-label">Quantity</div>
+                <input class="np-input" value="0" />
+              </div>
+              <div class="np-toggle-row" style="margin-bottom:0;"><div class="np-switch"></div><span class="t-lbl">Inventory Control</span></div>
+            </div>
+            <aside class="np-aside">
+              <div class="np-grid2">
+                <div><div class="np-label">Shelf <span class="opt">Optional</span></div><input class="np-input" /></div>
+                <div><div class="np-label">Bin <span class="opt">Optional</span></div><input class="np-input" /></div>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <!-- 8. VARIATIONS -->
+        <section class="np-card" id="sec-variations">
+          <div class="np-card-head"><h3>Variations</h3><span class="mi">expand_more</span></div>
+          <div class="np-card-body">
+            <div class="np-main">
+
+              <!-- option editor -->
+              <div class="var-option">
+                <div class="np-label">Option Name</div>
+                <input class="np-input" style="background:#fff;margin-bottom:18px;" />
+                <div class="np-label">Option Values</div>
+                <div class="var-value-row">
+                  <span class="mi var-drag">drag_indicator</span>
+                  <input class="np-input var-value-input" placeholder="Enter a value" />
+                  <button class="var-trash" data-vtrash><span class="mi">delete_outline</span></button>
+                </div>
+                <div class="var-value-row">
+                  <span class="mi var-drag">drag_indicator</span>
+                  <input class="np-input var-value-input" placeholder="Enter a value" />
+                  <button class="var-trash" data-vtrash><span class="mi">delete_outline</span></button>
+                </div>
+                <a class="var-add-value" data-addvalue><span class="mi">add</span>Add Value</a>
+                <div class="var-divider"></div>
+                <div class="var-opt-foot">
+                  <button class="var-delete">Delete</button>
+                  <div class="right">
+                    <span class="var-saved"><span class="mi">check_circle</span>All changes saved</span>
+                    <button class="var-done">Done</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- add option -->
+              <button class="var-add-option" id="varAddOption"><span class="mi">add</span>Add Option</button>
+
+              <!-- variants table -->
+              <div class="var-table-wrap">
+                <div class="var-table">
+                  <div class="var-toolbar">
+                    <button class="var-tbtn">Create on Channel</button>
+                    <button class="var-tbtn">Edit Variant Images</button>
+                    <div class="var-edit-cols-wrap">
+                      <a class="var-edit-cols" id="vecToggle">Edit Columns <span class="mi">expand_more</span></a>
+                      <div class="vec-menu" id="vecMenu">
+                        <div class="vec-item on"><span class="vec-box"><span class="mi">check</span></span>SKU</div>
+                        <div class="vec-item on"><span class="vec-box"><span class="mi">check</span></span>Price</div>
+                        <div class="vec-item on"><span class="vec-box"><span class="mi">check</span></span>Quantity</div>
+                        <div class="vec-item on"><span class="vec-box"><span class="mi">check</span></span>Sale Price</div>
+                        <div class="vec-item on"><span class="vec-box"><span class="mi">check</span></span>UPC</div>
+                        <div class="vec-item on"><span class="vec-box"><span class="mi">check</span></span>EAN</div>
+                        <div class="vec-item on"><span class="vec-box"><span class="mi">check</span></span>MPN</div>
+                        <div class="vec-item on"><span class="vec-box"><span class="mi">check</span></span>GTIN</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="var-th-row">
+                    <div class="vc-chk"><span class="cbx" data-vcheck></span></div>
+                    <div class="vc-img var-th">Image</div>
+                    <div class="vc-variant var-th">Variant</div>
+                    <div class="vc-price var-th">Price <span class="mi">edit</span></div>
+                    <div class="vc-qty var-th">Quantity <span class="mi">edit</span></div>
+                  </div>
+                  <div class="var-r-row">
+                    <div class="vc-chk"><span class="cbx" data-vcheck></span></div>
+                    <div class="vc-img"><div class="var-vthumb"><img src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2064%2064%27%3E%3Crect%20width%3D%2764%27%20height%3D%2764%27%20fill%3D%27%23F7F8FA%27/%3E%3Crect%20x%3D%2715%27%20y%3D%2744%27%20width%3D%274%27%20height%3D%279%27%20rx%3D%271%27%20fill%3D%27%236B4A2B%27/%3E%3Crect%20x%3D%2745%27%20y%3D%2744%27%20width%3D%274%27%20height%3D%279%27%20rx%3D%271%27%20fill%3D%27%236B4A2B%27/%3E%3Crect%20x%3D%2718%27%20y%3D%2717%27%20width%3D%2728%27%20height%3D%2717%27%20rx%3D%276%27%20fill%3D%27%23E2574C%27/%3E%3Crect%20x%3D%2713%27%20y%3D%2729%27%20width%3D%279%27%20height%3D%2717%27%20rx%3D%274%27%20fill%3D%27%23E2574C%27/%3E%3Crect%20x%3D%2742%27%20y%3D%2729%27%20width%3D%279%27%20height%3D%2717%27%20rx%3D%274%27%20fill%3D%27%23E2574C%27/%3E%3Crect%20x%3D%2715%27%20y%3D%2727%27%20width%3D%2734%27%20height%3D%2720%27%20rx%3D%275%27%20fill%3D%27%23E2574C%27/%3E%3C/svg%3E" alt="variant" style="width:100%;height:100%;border-radius:8px;object-fit:cover;"></div></div>
+                    <div class="vc-variant">Small/Red</div>
+                    <div class="vc-price"><input class="var-cell-input" value="2222" /></div>
+                    <div class="vc-qty"><input class="var-cell-input" value="3" /></div>
+                  </div>
+                  <div class="var-r-row">
+                    <div class="vc-chk"><span class="cbx" data-vcheck></span></div>
+                    <div class="vc-img"><div class="var-vthumb"><img src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2064%2064%27%3E%3Crect%20width%3D%2764%27%20height%3D%2764%27%20fill%3D%27%23F7F8FA%27/%3E%3Crect%20x%3D%2715%27%20y%3D%2744%27%20width%3D%274%27%20height%3D%279%27%20rx%3D%271%27%20fill%3D%27%236B4A2B%27/%3E%3Crect%20x%3D%2745%27%20y%3D%2744%27%20width%3D%274%27%20height%3D%279%27%20rx%3D%271%27%20fill%3D%27%236B4A2B%27/%3E%3Crect%20x%3D%2718%27%20y%3D%2717%27%20width%3D%2728%27%20height%3D%2717%27%20rx%3D%276%27%20fill%3D%27%234C7BE2%27/%3E%3Crect%20x%3D%2713%27%20y%3D%2729%27%20width%3D%279%27%20height%3D%2717%27%20rx%3D%274%27%20fill%3D%27%234C7BE2%27/%3E%3Crect%20x%3D%2742%27%20y%3D%2729%27%20width%3D%279%27%20height%3D%2717%27%20rx%3D%274%27%20fill%3D%27%234C7BE2%27/%3E%3Crect%20x%3D%2715%27%20y%3D%2727%27%20width%3D%2734%27%20height%3D%2720%27%20rx%3D%275%27%20fill%3D%27%234C7BE2%27/%3E%3C/svg%3E" alt="variant" style="width:100%;height:100%;border-radius:8px;object-fit:cover;"></div></div>
+                    <div class="vc-variant">Small/Red</div>
+                    <div class="vc-price"><input class="var-cell-input" value="2222" /></div>
+                    <div class="vc-qty"><input class="var-cell-input" value="3" /></div>
+                  </div>
+                  <div class="var-r-row">
+                    <div class="vc-chk"><span class="cbx" data-vcheck></span></div>
+                    <div class="vc-img"><div class="var-vthumb"><img src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2064%2064%27%3E%3Crect%20width%3D%2764%27%20height%3D%2764%27%20fill%3D%27%23F7F8FA%27/%3E%3Crect%20x%3D%2715%27%20y%3D%2744%27%20width%3D%274%27%20height%3D%279%27%20rx%3D%271%27%20fill%3D%27%236B4A2B%27/%3E%3Crect%20x%3D%2745%27%20y%3D%2744%27%20width%3D%274%27%20height%3D%279%27%20rx%3D%271%27%20fill%3D%27%236B4A2B%27/%3E%3Crect%20x%3D%2718%27%20y%3D%2717%27%20width%3D%2728%27%20height%3D%2717%27%20rx%3D%276%27%20fill%3D%27%233FB27F%27/%3E%3Crect%20x%3D%2713%27%20y%3D%2729%27%20width%3D%279%27%20height%3D%2717%27%20rx%3D%274%27%20fill%3D%27%233FB27F%27/%3E%3Crect%20x%3D%2742%27%20y%3D%2729%27%20width%3D%279%27%20height%3D%2717%27%20rx%3D%274%27%20fill%3D%27%233FB27F%27/%3E%3Crect%20x%3D%2715%27%20y%3D%2727%27%20width%3D%2734%27%20height%3D%2720%27%20rx%3D%275%27%20fill%3D%27%233FB27F%27/%3E%3C/svg%3E" alt="variant" style="width:100%;height:100%;border-radius:8px;object-fit:cover;"></div></div>
+                    <div class="vc-variant">Small/Red</div>
+                    <div class="vc-price"><input class="var-cell-input" value="2222" /></div>
+                    <div class="vc-qty"><input class="var-cell-input" value="3" /></div>
+                  </div>
+                  <div class="var-r-row">
+                    <div class="vc-chk"><span class="cbx" data-vcheck></span></div>
+                    <div class="vc-img"><div class="var-vthumb"><img src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2064%2064%27%3E%3Crect%20width%3D%2764%27%20height%3D%2764%27%20fill%3D%27%23F7F8FA%27/%3E%3Crect%20x%3D%2715%27%20y%3D%2744%27%20width%3D%274%27%20height%3D%279%27%20rx%3D%271%27%20fill%3D%27%236B4A2B%27/%3E%3Crect%20x%3D%2745%27%20y%3D%2744%27%20width%3D%274%27%20height%3D%279%27%20rx%3D%271%27%20fill%3D%27%236B4A2B%27/%3E%3Crect%20x%3D%2718%27%20y%3D%2717%27%20width%3D%2728%27%20height%3D%2717%27%20rx%3D%276%27%20fill%3D%27%233A3F4B%27/%3E%3Crect%20x%3D%2713%27%20y%3D%2729%27%20width%3D%279%27%20height%3D%2717%27%20rx%3D%274%27%20fill%3D%27%233A3F4B%27/%3E%3Crect%20x%3D%2742%27%20y%3D%2729%27%20width%3D%279%27%20height%3D%2717%27%20rx%3D%274%27%20fill%3D%27%233A3F4B%27/%3E%3Crect%20x%3D%2715%27%20y%3D%2727%27%20width%3D%2734%27%20height%3D%2720%27%20rx%3D%275%27%20fill%3D%27%233A3F4B%27/%3E%3C/svg%3E" alt="variant" style="width:100%;height:100%;border-radius:8px;object-fit:cover;"></div></div>
+                    <div class="vc-variant">Small/Red</div>
+                    <div class="vc-price"><input class="var-cell-input" value="2222" /></div>
+                    <div class="vc-qty"><input class="var-cell-input" value="3" /></div>
+                  </div>
+                  <div class="var-foot">
+                    <span class="pg">Rows per page: <b>25</b> <span class="mi" style="font-size:16px;">expand_more</span></span>
+                    <span class="pg">Page: <b>1</b> <span class="mi" style="font-size:16px;">expand_more</span></span>
+                    <span>1-6 of 6</span>
+                    <span class="pg"><span class="mi">chevron_left</span><span class="mi">chevron_right</span></span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+        <!-- 9. ITEM DISCLOSURES -->
+        <section class="np-card" id="sec-disclosures" style="margin-bottom:0;">
+          <div class="np-card-head"><h3>Item Disclosures</h3><span class="mi">expand_more</span></div>
+          <div class="np-card-body"><div class="np-main">
+
+            <div class="disc-row">
+              <div class="disc-label">General Safety Compliance <span class="np-info">?</span></div>
+              <div class="disc-main"><div class="disc-line"><div class="np-switch on"></div></div></div>
+            </div>
+
+            <div class="disc-row">
+              <div class="disc-label">Product Manufacturer</div>
+              <div class="disc-main">
+                <div class="disc-line"><div class="np-switch on"></div><span class="disc-desc">Provide the contact info for the product's manufacturer or the EU Responsible Person</span></div>
+                <div class="disc-card">
+                  <div class="disc-mfr">
+                    <div class="lbl">Manufacturer:</div>
+                    <div class="lbl">Country:</div>
+                    <div class="disc-mfr-actions"><span class="disc-edit"><span class="mi">edit</span></span><span class="disc-del"><span class="mi">delete</span></span></div>
+                  </div>
+                  <div style="margin-top:10px;font-size:14px;color:var(--np-ink);">0 EU Responsible Person</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="disc-row">
+              <div class="disc-label">Product Document</div>
+              <div class="disc-main">
+                <div class="disc-line"><div class="np-switch on"></div><span class="disc-desc">Upload user guides, certificates, and documents that are included with the item.</span></div>
+                <button class="disc-add-doc" id="discAddDoc"><span class="mi">add</span>Add Document</button>
+              </div>
+            </div>
+
+            <div class="disc-row">
+              <div class="disc-label">Product Safety Information</div>
+              <div class="disc-main">
+                <div class="disc-line"><div class="np-switch on"></div><span class="disc-desc">Add product safety information to your listing.</span></div>
+                <div class="disc-card" style="max-width:560px;">
+                  <p style="font-size:14px;color:#42526E;margin-bottom:14px;">Add the warnings present in your item's user manual or on the packaging.</p>
+                  <div class="disc-sub-card">
+                    <div class="disc-sub-head"><h5>Pictograms</h5><span class="disc-edit"><span class="mi">edit</span></span></div>
+                    <div style="margin-top:6px;font-size:14px;color:#42526E;">0 pictograms selected</div>
+                  </div>
+                  <div class="np-label">Safety Statements</div>
+                  <div class="np-select"><select><option></option></select><span class="mi">expand_more</span></div>
+                  <div class="np-hint">Select up to 8</div>
+                  <div class="np-label" style="margin-top:14px;">Additional Information</div>
+                  <input class="np-input" id="discAddInfo" maxlength="120" />
+                  <div class="disc-count"><span id="discCount">0</span>/120</div>
+                </div>
+              </div>
+            </div>
+
+          </div></div>
+        </section>
+
+      </div>
+    </div>
+
+    <div class="np-foot">
+      <button class="np-btn np-btn-ghost" id="npCancel">Cancel</button>
+      <div class="np-foot-right">
+        <button class="np-btn np-btn-ghost">Save Product</button>
+        <button class="np-btn np-btn-royal">Save and list product to eBay</button>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<!-- ============ GENERATE LISTING (Images→Listings) MODAL ============ -->
+<div class="gl-overlay" id="glOverlay">
+  <div class="gl-modal" role="dialog" aria-label="Add Product with Image">
+    <div class="gl-head">
+      <h2>Add Product with Image <span class="ai-badge"><span class="mi">auto_awesome</span>AI</span></h2>
+      <button class="gl-x" id="glClose"><span class="mi">close</span></button>
+    </div>
+
+    <div class="gl-body">
+      <!-- Upload area (replaces photo picker) -->
+      <div class="gl-block">
+        <div class="gl-sec-title">Select a set of well-rounded photos</div>
+        <div class="gl-sec-desc">Choose up to <b>8 photos</b> that showcase the most important details about your item. We recommend including a full-length shot, a garment label showing the brand, size, and composition.</div>
+        <div class="np-dropzone">
+          <div class="np-dz-cloud"><span class="mi">cloud_upload</span></div>
+          <div class="np-dz-title">Drag &amp; Drop images here</div>
+          <div class="np-dz-actions">
+            <button class="np-btn np-btn-royal" style="height:38px;">Upload New</button>
+            <span class="np-dz-or">or</span>
+            <button class="np-btn np-btn-ghost" style="height:38px;">Select from Library</button>
+          </div>
+          <a class="np-addurl">Add from URL</a>
+        </div>
+        <div class="np-thumbs">
+          <div class="np-thumb"><span class="mi ph">image</span><span class="rm"><span class="mi">close</span></span></div>
+          <div class="np-thumb"><span class="mi ph">image</span><span class="rm"><span class="mi">close</span></span></div>
+          <div class="np-thumb"><span class="mi ph">image</span><span class="rm"><span class="mi">close</span></span></div>
+        </div>
+        <a class="np-showall">Show all</a>
+      </div>
+
+      <!-- Department -->
+      <div class="gl-block">
+        <div class="gl-sec-title">Select the department <span class="opt">(optional)</span></div>
+        <div class="gl-sec-desc">Providing this information is optional, but will help our AI accurately categorize your listing.</div>
+        <div class="gl-depts" id="glDepts">
+          <button class="gl-dept active"><span class="mi">interests</span>Unspecified</button>
+          <button class="gl-dept"><span class="mi">male</span>Men</button>
+          <button class="gl-dept"><span class="mi">female</span>Women</button>
+          <button class="gl-dept"><span class="mi">child_care</span>Kids</button>
+        </div>
+      </div>
+
+      <!-- Generation Settings -->
+      <div class="gl-settings">
+        <div class="gl-settings-head">
+          <div>
+            <div class="gl-sec-title" style="margin-bottom:4px;">Generation Settings <span class="opt">(optional)</span></div>
+            <div class="gl-sec-desc" style="margin:0;">Customize AI instructions for this listing.</div>
+          </div>
+          <button class="gl-save-default"><span class="mi">save</span>Save as Default</button>
+        </div>
+
+        <div class="gl-ci-label">Custom Instructions</div>
+        <div class="gl-chips">
+          <span class="lead">Add sections:</span>
+          <button class="gl-chip"><span class="mi">add</span>Title</button>
+          <button class="gl-chip"><span class="mi">add</span>Description</button>
+          <button class="gl-chip"><span class="mi">add</span>Condition</button>
+          <button class="gl-chip"><span class="mi">add</span>Custom Attributes</button>
+        </div>
+        <div class="gl-ta-wrap">
+          <textarea class="gl-textarea" rows="7" maxlength="1000"></textarea>
+          <span class="gl-count">0/1000</span>
+        </div>
+
+        <div class="gl-ci-label" style="margin-top:20px;">Description Footer</div>
+        <div class="gl-sec-desc">Add a personal touch at the end of every description</div>
+        <div class="gl-ta-wrap">
+          <textarea class="gl-textarea" rows="4" maxlength="500"></textarea>
+          <span class="gl-count">0/500</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="gl-foot">
+      <button class="gl-cancel" id="glCancel">Cancel</button>
+      <button class="gl-generate"><span class="mi">auto_awesome</span>Generate (5 Credit)</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ URLs → LISTINGS MODAL ============ -->
+<div class="ul-overlay" id="ulOverlay">
+  <div class="ul-modal" role="dialog" aria-label="Add Product with URLs">
+    <div class="ul-head">
+      <h2>Add Product with URLs <span class="ai-badge"><span class="mi">auto_awesome</span>AI</span></h2>
+      <button class="ul-x" id="ulClose"><span class="mi">close</span></button>
+    </div>
+
+    <div class="ul-body">
+      <div class="ul-subtitle">URLs to Listings</div>
+      <p class="ul-desc">Add products directly from a product page by copying and pasting the product page URL below. The new listing will be saved as a LitCommerce draft.</p>
+
+      <div class="ul-card">
+        <div class="ul-supported">
+          <span class="lbl">Supported URL's:</span>
+          <span class="ul-brand"><span class="ebay" style="font-size:15px;"><span class="e">e</span><span class="b">b</span><span class="a">a</span><span class="y">y</span></span> eBay</span>
+          <span class="ul-brand"><span class="ul-az">a</span> Amazon</span>
+          <span class="ul-brand"><span class="ul-wm">✶</span> Walmart</span>
+        </div>
+        <div class="ul-url-list" id="ulUrlList"></div>
+      </div>
+    </div>
+
+    <div class="ul-foot">
+      <div class="ul-credits">
+        <div class="c1">Remaining AI Credits: <b>10</b> <span class="np-info">i</span></div>
+        <div class="c2">Using this bulk action will cost 1 AI credit per listing.</div>
+      </div>
+      <div class="ul-foot-btns">
+        <button class="ul-cancel" id="ulCancel">Cancel</button>
+        <button class="ul-create">Add Product (1 credit)</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TITLES → LISTINGS MODAL ============ -->
+<div class="ul-overlay" id="tlOverlay">
+  <div class="ul-modal" role="dialog" aria-label="Add Product with Title">
+    <div class="ul-head">
+      <h2>Add Product with Title <span class="ai-badge"><span class="mi">auto_awesome</span>AI</span></h2>
+      <button class="ul-x" id="tlClose"><span class="mi">close</span></button>
+    </div>
+
+    <div class="ul-body">
+      <div class="ul-subtitle">Titles to Listings</div>
+      <p class="ul-desc">Add products from product titles by searching for products below. The new listing will be saved as a LitCommerce draft.</p>
+
+      <div id="tlListings">
+        <!-- Listing #1 (populated) -->
+        <div class="tl-listing-card">
+          <div class="tl-listing-head">
+            <h4>Listing #<span class="tl-num">1</span></h4>
+            <button class="tl-listing-x" data-remove><span class="mi">close</span></button>
+          </div>
+          <div class="tl-search-row">
+            <input class="tl-search-input" value=",m ," />
+            <button class="tl-search-btn">Search</button>
+          </div>
+          <div class="tl-results">
+            <div class="tl-result"><div class="tl-thumb"><span class="mi">image</span></div><div class="name">Aquage Biomega Moisture Conditioner 5 oz</div><button class="tl-select">Select</button></div>
+            <div class="tl-result"><div class="tl-thumb"><span class="mi">image</span></div><div class="name">HP CF503X 202X Magenta High Yield Toner Cartridge , Color LaserJet Pro M254, M28</div><button class="tl-select">Select</button></div>
+            <div class="tl-result"><div class="tl-thumb"><span class="mi">image</span></div><div class="name">Oribe Run Through Detangling Primer 5.9 oz</div><button class="tl-select">Select</button></div>
+            <div class="tl-result"><div class="tl-thumb"><span class="mi">image</span></div><div class="name">Converse Unisex Adult Chuck Taylor All Star High Top Sneaker M9160C Black</div><button class="tl-select">Select</button></div>
+            <div class="tl-result"><div class="tl-thumb"><span class="mi">image</span></div><div class="name">3M HE Filter TR-3712N for Versaflo TR-300 Series PAPR 5 EA/Case</div><button class="tl-select">Select</button></div>
+            <button class="tl-viewmore">View more</button>
+          </div>
+        </div>
+
+        <!-- Listing #2 (empty) -->
+        <div class="tl-listing-card">
+          <div class="tl-listing-head">
+            <h4>Listing #<span class="tl-num">2</span></h4>
+            <button class="tl-listing-x" data-remove><span class="mi">close</span></button>
+          </div>
+          <div class="tl-search-row">
+            <input class="tl-search-input" placeholder="Add Title" />
+            <button class="tl-search-btn">Search</button>
+          </div>
+        </div>
+      </div>
+
+      <button class="tl-add-listing" id="tlAdd"><span class="mi">add</span>Add Listing</button>
+    </div>
+
+    <div class="ul-foot">
+      <div class="ul-credits">
+        <div class="c1">Remaining AI Credits: <b>10</b> <span class="np-info">i</span></div>
+        <div class="c2">Using this bulk action will cost 1 AI credit per listing.</div>
+      </div>
+      <div class="ul-foot-btns">
+        <button class="ul-cancel" id="tlCancel">Cancel</button>
+        <button class="ul-create">Add Product (1 credit)</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ADD DOCUMENT MODAL ============ -->
+<div class="dm-overlay" id="dmOverlay">
+  <div class="dm-modal" role="dialog" aria-label="Add Document">
+    <div class="dm-head">
+      <h2>Add Document</h2>
+      <button class="dm-x" id="dmClose"><span class="mi">close</span></button>
+    </div>
+    <div class="dm-body">
+      <div class="np-field-row"><div class="np-label">Document Type</div><div class="np-select"><select><option>Select Document Type</option></select><span class="mi">expand_more</span></div></div>
+      <div class="np-field-row" style="margin-bottom:8px;"><div class="np-label">Language</div><div class="np-select"><select><option>Select Languages</option></select><span class="mi">expand_more</span></div></div>
+      <div class="dm-upload"><span class="mi">add</span>Upload Document</div>
+      <p class="dm-hint">No documents uploaded yet. Max 10MB each, file types accepted incl. PNG, JPG, PDF</p>
+    </div>
+    <div class="dm-foot">
+      <button class="dm-save" id="dmSave">Save</button>
+      <button class="dm-cancel" id="dmCancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  var products = [
+    {name:"2PC CRASH BAR TOOL WATERPROOF LEFT AND RIGHT BAGS FOR HARLEY HONDA YAMAHA - D52", sku:"D52", qty:12},
+    {name:"2PC X-LARGE CORDURA FABRIC SISSY BARREL BAG w/ RAIN COVER FOR YAMAHA - YV7K", sku:"V7K-Y", qty:12},
+    {name:'9" W MOTORCYCLE WATERPROOF HARD STUDDED TOOL FORK BAG FOR HARLEY - DX36', sku:"X36-D", qty:5},
+    {name:'9" W MOTORCYCLE WATERPROOF HARD STUDDED TOOL FORK BAG FOR HONDA - HX36', sku:"X36-H", qty:5},
+    {name:'9" W MOTORCYCLE WATERPROOF HARD STUDDED TOOL FORK BAG FOR YAMAHA - YX36', sku:"X36-Y", qty:5},
+    {name:'9" W MOTORCYCLE WATERPROOF HARD STUDDED TOOL FORK BAG FOR SUZUKI - SX36', sku:"X36-S", qty:5},
+    {name:'9" W MOTORCYCLE WATERPROOF HARD STUDDED TOOL FORK BAG FOR KAWASAKI - KX36', sku:"X36-K", qty:5},
+    {name:"Dunhill Rollagas Lighter Gold Tone Textured MADE in Switzerland", sku:"", qty:1},
+    {name:"Kusini Electric Chocolate Fondue Maker", sku:"", qty:1},
+    {name:"BRAND NEW Gift Set with 2 Glasses, 2 Straws & Scoop. (No cookies in the box)", sku:"", qty:1}
+  ];
+  var html = products.map(function(p){
+    return '<div class="t-row">'
+      + '<div class="c-chk"><span class="cbx"></span></div>'
+      + '<div class="c-img"><div class="thumb"><span class="mi">image</span></div></div>'
+      + '<div class="c-link"><span class="ldot"></span><span class="mi">link</span></div>'
+      + '<div class="c-status"></div>'
+      + '<div class="c-name"><span class="name-link">'+p.name.replace(/&/g,'&amp;')+'</span></div>'
+      + '<div class="c-sku cell-sub">'+p.sku+'</div>'
+      + '<div class="c-qty cell-sub">'+p.qty+'</div>'
+      + '</div>';
+  }).join('');
+  document.getElementById('rows').innerHTML = html;
+
+  var btn = document.getElementById('addBtn');
+  var menu = document.getElementById('addMenu');
+  btn.addEventListener('click', function(e){ e.stopPropagation(); menu.classList.toggle('open'); });
+  document.addEventListener('click', function(){ menu.classList.remove('open'); });
+  menu.addEventListener('click', function(e){ e.stopPropagation(); });
+  Array.prototype.forEach.call(menu.querySelectorAll('.menu-item'), function(item){
+    item.addEventListener('click', function(){ menu.classList.remove('open'); });
+  });
+
+  /* ---- Add New Product drawer ---- */
+  var overlay = document.getElementById('npOverlay');
+  var content = document.getElementById('npContent');
+  var navItems = Array.prototype.slice.call(document.querySelectorAll('#npNav .np-nav-item'));
+
+  function openDrawer(){ overlay.classList.add('open'); document.body.style.overflow='hidden'; }
+  function closeDrawer(){ overlay.classList.remove('open'); document.body.style.overflow=''; }
+
+  document.getElementById('addManual').addEventListener('click', function(e){ e.stopPropagation(); menu.classList.remove('open'); openDrawer(); });
+  document.getElementById('npClose').addEventListener('click', closeDrawer);
+  document.getElementById('npCancel').addEventListener('click', closeDrawer);
+  overlay.addEventListener('click', function(e){ if(e.target===overlay) closeDrawer(); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeDrawer(); });
+
+  // nav click -> scroll to section
+  navItems.forEach(function(it){
+    it.addEventListener('click', function(){
+      var el = document.getElementById(it.getAttribute('data-target'));
+      if(el) content.scrollTo({ top: el.offsetTop - 12, behavior:'smooth' });
+    });
+  });
+
+  // scroll-spy
+  content.addEventListener('scroll', function(){
+    var pos = content.scrollTop + 80;
+    var current = navItems[0];
+    navItems.forEach(function(it){
+      var el = document.getElementById(it.getAttribute('data-target'));
+      if(el && el.offsetTop <= pos) current = it;
+    });
+    navItems.forEach(function(it){ it.classList.toggle('active', it===current); });
+  });
+
+  // toggle switches
+  Array.prototype.forEach.call(document.querySelectorAll('.np-switch'), function(sw){
+    sw.addEventListener('click', function(){ sw.classList.toggle('on'); });
+  });
+
+  // collapsible cards (only those with a chevron)
+  Array.prototype.forEach.call(document.querySelectorAll('.np-card-head'), function(head){
+    var chevron = head.querySelector('.mi');
+    if(!chevron || chevron.textContent.trim() !== 'expand_more') return;
+    head.addEventListener('click', function(){
+      var body = head.nextElementSibling;
+      var hidden = body.style.display === 'none';
+      body.style.display = hidden ? '' : 'none';
+      chevron.textContent = hidden ? 'expand_more' : 'chevron_right';
+    });
+  });
+
+  /* ---- Generate Listing (Images -> Listings) modal ---- */
+  var glOverlay = document.getElementById('glOverlay');
+  function openGL(){ glOverlay.classList.add('open'); document.body.style.overflow='hidden'; }
+  function closeGL(){ glOverlay.classList.remove('open'); document.body.style.overflow=''; }
+
+  document.getElementById('addImages').addEventListener('click', function(e){ e.stopPropagation(); menu.classList.remove('open'); openGL(); });
+  document.getElementById('glClose').addEventListener('click', closeGL);
+  document.getElementById('glCancel').addEventListener('click', closeGL);
+  glOverlay.addEventListener('click', function(e){ if(e.target===glOverlay) closeGL(); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeGL(); });
+
+  // department segmented selection
+  var depts = Array.prototype.slice.call(document.querySelectorAll('#glDepts .gl-dept'));
+  depts.forEach(function(d){ d.addEventListener('click', function(){
+    depts.forEach(function(x){ x.classList.remove('active'); }); d.classList.add('active');
+  }); });
+
+  // textarea counters
+  Array.prototype.forEach.call(glOverlay.querySelectorAll('.gl-textarea'), function(ta){
+    var max = ta.getAttribute('maxlength');
+    var counter = ta.parentElement.querySelector('.gl-count');
+    ta.addEventListener('input', function(){ counter.textContent = ta.value.length + '/' + max; });
+  });
+
+  /* ---- URLs -> Listings modal ---- */
+  var ulOverlay = document.getElementById('ulOverlay');
+  var ulList = document.getElementById('ulUrlList');
+  var ulRows = '';
+  for(var i=1;i<=10;i++){
+    ulRows += '<div class="ul-url-row"><div class="ul-num">'+i+'</div>'
+      + '<input class="ul-url-input" placeholder="https://example.com/product" /></div>';
+  }
+  ulList.innerHTML = ulRows;
+
+  function openUL(){ ulOverlay.classList.add('open'); document.body.style.overflow='hidden'; }
+  function closeUL(){ ulOverlay.classList.remove('open'); document.body.style.overflow=''; }
+
+  document.getElementById('addUrls').addEventListener('click', function(e){ e.stopPropagation(); menu.classList.remove('open'); openUL(); });
+  document.getElementById('ulClose').addEventListener('click', closeUL);
+  document.getElementById('ulCancel').addEventListener('click', closeUL);
+  ulOverlay.addEventListener('click', function(e){ if(e.target===ulOverlay) closeUL(); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeUL(); });
+
+  // modal checkboxes
+  Array.prototype.forEach.call(ulOverlay.querySelectorAll('[data-check]'), function(c){
+    c.addEventListener('click', function(){ c.classList.toggle('on'); });
+  });
+
+  /* ---- Titles -> Listings modal ---- */
+  var tlOverlay = document.getElementById('tlOverlay');
+  var tlListings = document.getElementById('tlListings');
+
+  function openTL(){ tlOverlay.classList.add('open'); document.body.style.overflow='hidden'; }
+  function closeTL(){ tlOverlay.classList.remove('open'); document.body.style.overflow=''; }
+
+  document.getElementById('addTitles').addEventListener('click', function(e){ e.stopPropagation(); menu.classList.remove('open'); openTL(); });
+  document.getElementById('tlClose').addEventListener('click', closeTL);
+  document.getElementById('tlCancel').addEventListener('click', closeTL);
+  tlOverlay.addEventListener('click', function(e){ if(e.target===tlOverlay) closeTL(); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeTL(); });
+
+  function tlRenumber(){
+    Array.prototype.forEach.call(tlListings.querySelectorAll('.tl-num'), function(n, i){ n.textContent = i + 1; });
+  }
+  function tlBindRemove(card){
+    card.querySelector('[data-remove]').addEventListener('click', function(){ card.remove(); tlRenumber(); });
+  }
+  // bind existing remove buttons
+  Array.prototype.forEach.call(tlListings.querySelectorAll('.tl-listing-card'), tlBindRemove);
+
+  document.getElementById('tlAdd').addEventListener('click', function(){
+    var card = document.createElement('div');
+    card.className = 'tl-listing-card';
+    card.innerHTML = '<div class="tl-listing-head"><h4>Listing #<span class="tl-num"></span></h4>'
+      + '<button class="tl-listing-x" data-remove><span class="mi">close</span></button></div>'
+      + '<div class="tl-search-row"><input class="tl-search-input" placeholder="Add Title" />'
+      + '<button class="tl-search-btn">Search</button></div>';
+    tlListings.appendChild(card);
+    tlBindRemove(card);
+    tlRenumber();
+  });
+
+  /* ---- Variations section ---- */
+  var varSection = document.getElementById('sec-variations');
+  function bindVTrash(btn){ btn.addEventListener('click', function(){ btn.closest('.var-value-row').remove(); }); }
+  function bindVCheck(c){ c.addEventListener('click', function(){ c.classList.toggle('on'); }); }
+  Array.prototype.forEach.call(varSection.querySelectorAll('[data-vtrash]'), bindVTrash);
+  Array.prototype.forEach.call(varSection.querySelectorAll('[data-vcheck]'), bindVCheck);
+
+  // Edit Columns dropdown
+  var vecToggle = document.getElementById('vecToggle');
+  var vecMenu = document.getElementById('vecMenu');
+  vecToggle.addEventListener('click', function(e){ e.stopPropagation(); vecMenu.classList.toggle('open'); });
+  vecMenu.addEventListener('click', function(e){ e.stopPropagation(); });
+  document.addEventListener('click', function(){ vecMenu.classList.remove('open'); });
+  Array.prototype.forEach.call(vecMenu.querySelectorAll('.vec-item'), function(it){
+    it.addEventListener('click', function(){ it.classList.toggle('on'); });
+  });
+
+  /* ---- Custom Specifics: add name/value rows ---- */
+  var csRows = document.getElementById('csRows');
+  var csEmpty = document.getElementById('csEmpty');
+  document.getElementById('csAdd').addEventListener('click', function(){
+    if(csEmpty) csEmpty.style.display = 'none';
+    var row = document.createElement('div');
+    row.className = 'cs-row';
+    row.innerHTML = '<input class="np-input cs-name" placeholder="Name" />'
+      + '<input class="np-input cs-val" placeholder="Enter value" />'
+      + '<button class="cs-x"><span class="mi">close</span></button>';
+    var name = row.querySelector('.cs-name');
+    var val = row.querySelector('.cs-val');
+    name.addEventListener('input', function(){ val.placeholder = name.value ? ('Enter ' + name.value + ' value') : 'Enter value'; });
+    row.querySelector('.cs-x').addEventListener('click', function(){
+      row.remove();
+      if(csRows.children.length === 0 && csEmpty) csEmpty.style.display = '';
+    });
+    csRows.appendChild(row);
+  });
+
+  /* ---- Compatibility: duplicate / delete / add rows ---- */
+  var compatTable = document.getElementById('compatTable');
+  function compatBind(row){
+    var del = row.querySelector('[data-compdel]');
+    if(del) del.addEventListener('click', function(){ row.remove(); });
+    var dup = row.querySelector('[data-compdup]');
+    if(dup) dup.addEventListener('click', function(){
+      var c = row.cloneNode(true);
+      compatBind(c);
+      row.parentNode.insertBefore(c, row.nextSibling);
+    });
+  }
+  Array.prototype.forEach.call(compatTable.querySelectorAll('.compat-r'), compatBind);
+  document.getElementById('compatAdd').addEventListener('click', function(){
+    var first = compatTable.querySelector('.compat-r');
+    var c = first.cloneNode(true);
+    Array.prototype.forEach.call(c.querySelectorAll('input'), function(i){ i.value = ''; });
+    compatBind(c);
+    compatTable.appendChild(c);
+  });
+
+  /* ---- Add Document modal ---- */
+  var dmOverlay = document.getElementById('dmOverlay');
+  function openDM(){ dmOverlay.classList.add('open'); }
+  function closeDM(){ dmOverlay.classList.remove('open'); }
+  document.getElementById('discAddDoc').addEventListener('click', openDM);
+  document.getElementById('dmClose').addEventListener('click', closeDM);
+  document.getElementById('dmCancel').addEventListener('click', closeDM);
+  document.getElementById('dmSave').addEventListener('click', closeDM);
+  dmOverlay.addEventListener('click', function(e){ if(e.target===dmOverlay) closeDM(); });
+
+  /* ---- Item Disclosures: additional info counter ---- */
+  var discInfo = document.getElementById('discAddInfo');
+  var discCount = document.getElementById('discCount');
+  if(discInfo) discInfo.addEventListener('input', function(){ discCount.textContent = discInfo.value.length; });
+
+  // Add Value (within each option editor)
+  Array.prototype.forEach.call(varSection.querySelectorAll('[data-addvalue]'), function(link){
+    link.addEventListener('click', function(){
+      var row = document.createElement('div');
+      row.className = 'var-value-row';
+      row.innerHTML = '<span class="mi var-drag">drag_indicator</span>'
+        + '<input class="np-input var-value-input" placeholder="Enter a value" />'
+        + '<button class="var-trash" data-vtrash><span class="mi">delete_outline</span></button>';
+      link.parentNode.insertBefore(row, link);
+      bindVTrash(row.querySelector('[data-vtrash]'));
+    });
+  });
+
+  // Add Option (clone the option editor)
+  var addOptBtn = document.getElementById('varAddOption');
+  addOptBtn.addEventListener('click', function(){
+    var original = varSection.querySelector('.var-option');
+    var clone = original.cloneNode(true);
+    clone.querySelectorAll('input').forEach(function(i){ i.value=''; });
+    addOptBtn.parentNode.insertBefore(clone, addOptBtn);
+    Array.prototype.forEach.call(clone.querySelectorAll('[data-vtrash]'), bindVTrash);
+    var addLink = clone.querySelector('[data-addvalue]');
+    addLink.addEventListener('click', function(){
+      var row = document.createElement('div');
+      row.className = 'var-value-row';
+      row.innerHTML = '<span class="mi var-drag">drag_indicator</span>'
+        + '<input class="np-input var-value-input" placeholder="Enter a value" />'
+        + '<button class="var-trash" data-vtrash><span class="mi">delete_outline</span></button>';
+      addLink.parentNode.insertBefore(row, addLink);
+      bindVTrash(row.querySelector('[data-vtrash]'));
+    });
+  });
+</script>
+</body>
+</html>

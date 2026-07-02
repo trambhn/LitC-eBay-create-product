@@ -588,6 +588,25 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
 .bo-lbl{flex:1;font-size:14.5px;color:var(--np-ink);font-weight:500;}
 .bo-input{width:180px;flex-shrink:0;}
 
+/* ===== FORMAT AND DURATION ===== */
+.fmt-radio-group{display:flex;align-items:center;gap:40px;flex-wrap:wrap;}
+.fmt-radio-opt{display:flex;align-items:center;gap:10px;cursor:pointer;font-size:15px;color:var(--np-ink);font-weight:500;}
+.fmt-radio{width:22px;height:22px;border-radius:50%;border:2px solid #9AA7C0;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.fmt-radio.on{border-color:var(--blue);}
+.fmt-radio.on::after{content:"";width:11px;height:11px;border-radius:50%;background:var(--blue);}
+.np-select.disabled select{background:#F4F5F7;color:#9AA7C0;cursor:not-allowed;}
+.fmt-check-row{display:flex;align-items:center;gap:14px;margin:20px 0;}
+.fmt-check-label{width:150px;flex-shrink:0;font-size:14px;font-weight:700;color:var(--np-ink);}
+.fmt-box{width:22px;height:22px;border-radius:5px;border:2px solid #C1C7D0;background:#fff;display:flex;
+  align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;}
+.fmt-box .mi{font-size:16px;color:#fff;display:none;}
+.fmt-box.on{background:var(--blue);border-color:var(--blue);}
+.fmt-box.on .mi{display:block;}
+.fmt-desc{font-size:14.5px;color:var(--np-ink);cursor:pointer;}
+.fmt-datetime-wrap{margin:-8px 0 4px 164px;max-width:260px;display:none;}
+.fmt-datetime-wrap.show{display:block;}
+.fmt-datetime{height:44px;}
+
 @media (max-width:1080px){
   .np-card-body{flex-direction:column;}
   .np-aside{width:auto;border-left:none;border-top:1px solid var(--np-line);}
@@ -758,6 +777,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
         <div class="np-nav-item" data-target="sec-custom"><span class="mi">tune</span>Custom Specifics</div>
         <div class="np-nav-item" data-target="sec-compatibility"><span class="mi">directions_car</span>Compatibility</div>
         <div class="np-nav-item" data-target="sec-pricing"><span class="mi">sell</span>Pricing<span class="req-dot"></span></div>
+        <div class="np-nav-item" data-target="sec-format"><span class="mi">event</span>Format and Duration</div>
         <div class="np-nav-item" data-target="sec-inventory"><span class="mi">inventory_2</span>Inventory</div>
         <div class="np-nav-item" data-target="sec-variations"><span class="mi">style</span>Variations</div>
         <div class="np-nav-item" data-target="sec-disclosures"><span class="mi">verified_user</span>Item Disclosures</div>
@@ -1024,10 +1044,6 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
           <div class="np-card-body">
             <div class="np-main">
               <div class="np-field-row">
-                <div class="np-label">Listing Type</div>
-                <div class="np-select"><select><option>Fixed Price</option></select><span class="mi">expand_more</span></div>
-              </div>
-              <div class="np-field-row">
                 <div class="np-label">Listing Price (USD) <span class="req">Required</span></div>
                 <input class="np-input err" id="npPrice" />
                 <div class="np-err-txt" id="npPriceErr">Price have to be greater than 0.</div>
@@ -1048,11 +1064,55 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
                 </div>
               </div>
               <div class="np-sub-h" style="margin-top:6px;">Additional Pricing Settings</div>
-              <div class="np-toggle-row"><div class="np-switch"></div><span class="t-lbl">Private Listing <span class="np-info">i</span></span></div>
               <div class="np-toggle-row"><div class="np-switch"></div><span class="t-lbl">Volume Pricing <span class="np-info">i</span></span></div>
               <p class="np-hint">eBay may charge fees for this feature, based on listing region.</p>
             </div>
           </div>
+        </section>
+
+        <!-- 6b. FORMAT AND DURATION -->
+        <section class="np-card" id="sec-format">
+          <div class="np-card-head"><h3>Format and Duration</h3><span class="mi">expand_more</span></div>
+          <div class="np-card-body"><div class="np-main">
+
+            <div class="np-field-row">
+              <div class="np-label">Listing Format <span class="req">*</span> <span class="np-info">?</span></div>
+              <div class="fmt-radio-group" id="fmtRadioGroup">
+                <div class="fmt-radio-opt" data-fmt="auction"><span class="fmt-radio on"></span>Auction</div>
+                <div class="fmt-radio-opt" data-fmt="fixed"><span class="fmt-radio"></span>Fixed Price Item</div>
+              </div>
+            </div>
+
+            <div class="np-field-row">
+              <div class="np-label">Duration <span class="req">*</span></div>
+              <div class="np-select" id="durationWrap">
+                <select id="durationSelect">
+                  <option>1 Day (rating must be &gt; 10)</option>
+                  <option>3 Days</option>
+                  <option>5 Days</option>
+                  <option>7 Days</option>
+                  <option>10 Days</option>
+                </select>
+                <span class="mi">expand_more</span>
+              </div>
+            </div>
+
+            <div class="fmt-check-row">
+              <span class="fmt-check-label">Scheduled</span>
+              <span class="fmt-box" id="scheduledBox"><span class="mi">check</span></span>
+              <span class="fmt-desc" id="scheduledDesc">Schedule the listing start time (UTC)</span>
+            </div>
+            <div class="fmt-datetime-wrap" id="scheduledDateWrap">
+              <input type="datetime-local" class="np-input fmt-datetime" />
+            </div>
+
+            <div class="fmt-check-row" style="margin-bottom:0;">
+              <span class="fmt-check-label">Private Listing</span>
+              <span class="fmt-box" id="privateListingBox"><span class="mi">check</span></span>
+              <span class="fmt-desc" id="privateListingDesc">Allow buyers to remain anonymous when they bid on or buy an item.</span>
+            </div>
+
+          </div></div>
         </section>
 
         <!-- 7. INVENTORY (img10/11) -->
@@ -1523,6 +1583,50 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
       boFields.style.display = boSwitch.classList.contains('on') ? '' : 'none';
     });
   }
+
+  /* ---- Format and Duration ---- */
+  var fmtGroup = document.getElementById('fmtRadioGroup');
+  var durationWrap = document.getElementById('durationWrap');
+  var durationSelect = document.getElementById('durationSelect');
+  var AUCTION_OPTS = ['1 Day (rating must be > 10)', '3 Days', '5 Days', '7 Days', '10 Days'];
+
+  function setListingFormat(fmt){
+    Array.prototype.forEach.call(fmtGroup.querySelectorAll('.fmt-radio-opt'), function(opt){
+      var on = opt.getAttribute('data-fmt') === fmt;
+      opt.querySelector('.fmt-radio').classList.toggle('on', on);
+    });
+    if(fmt === 'auction'){
+      durationSelect.innerHTML = AUCTION_OPTS.map(function(o){ return '<option>' + o + '</option>'; }).join('');
+      durationSelect.disabled = false;
+      durationWrap.classList.remove('disabled');
+    } else {
+      durationSelect.innerHTML = '<option>Good \'Til Cancel</option>';
+      durationSelect.disabled = true;
+      durationWrap.classList.add('disabled');
+    }
+  }
+  if(fmtGroup){
+    Array.prototype.forEach.call(fmtGroup.querySelectorAll('.fmt-radio-opt'), function(opt){
+      opt.addEventListener('click', function(){ setListingFormat(opt.getAttribute('data-fmt')); });
+    });
+    setListingFormat('auction');
+  }
+
+  // Scheduled checkbox -> reveal datetime field
+  var schedBox = document.getElementById('scheduledBox');
+  var schedDesc = document.getElementById('scheduledDesc');
+  var schedDateWrap = document.getElementById('scheduledDateWrap');
+  function toggleScheduled(){
+    var on = schedBox.classList.toggle('on');
+    schedDateWrap.classList.toggle('show', on);
+  }
+  if(schedBox){ schedBox.addEventListener('click', toggleScheduled); schedDesc.addEventListener('click', toggleScheduled); }
+
+  // Private Listing checkbox
+  var privBox = document.getElementById('privateListingBox');
+  var privDesc = document.getElementById('privateListingDesc');
+  function togglePrivate(){ privBox.classList.toggle('on'); }
+  if(privBox){ privBox.addEventListener('click', togglePrivate); privDesc.addEventListener('click', togglePrivate); }
 
   // collapsible cards (only those with a chevron)
   Array.prototype.forEach.call(document.querySelectorAll('.np-card-head'), function(head){

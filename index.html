@@ -390,6 +390,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
 .ul-brand{display:inline-flex;align-items:center;gap:6px;font-weight:600;color:var(--np-ink);font-size:15px;}
 .ul-az{width:20px;height:20px;border-radius:4px;background:#FF9900;color:#111;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;}
 .ul-wm{width:18px;height:18px;border-radius:50%;background:#0071CE;color:#FFC220;font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center;}
+.ul-etsy{color:#F1641E;font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:17px;font-style:italic;letter-spacing:-.5px;}
 .ul-url-list{max-height:300px;overflow-y:auto;padding-right:4px;}
 .ul-url-row{display:flex;align-items:center;gap:14px;margin-bottom:12px;}
 .ul-num{width:36px;height:36px;border-radius:50%;border:1px solid #D7DCE3;color:#6B7280;display:flex;align-items:center;
@@ -439,6 +440,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
 .tl-select{height:42px;padding:0 24px;border:1px solid #9DBDF7;border-radius:8px;background:#fff;color:var(--blue);
   font-weight:600;font-size:14.5px;flex-shrink:0;cursor:pointer;}
 .tl-select:hover{background:#F4F8FF;}
+.tl-select.selected{background:var(--blue);color:#fff;border-color:var(--blue);}
 .tl-viewmore{display:block;margin:8px auto 0;height:42px;padding:0 22px;border:1px solid #9DBDF7;border-radius:8px;
   background:#fff;color:var(--blue);font-weight:600;font-size:14.5px;cursor:pointer;}
 .tl-viewmore:hover{background:#F4F8FF;}
@@ -580,6 +582,11 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
 .ai-badge{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 9px;border-radius:11px;
   background:linear-gradient(90deg,#7C3AED,#4C7BE2);color:#fff;font-size:12px;font-weight:700;margin-left:10px;vertical-align:middle;}
 .ai-badge .mi{font-size:14px;}
+.bo-card{border:1px solid var(--np-line);border-radius:10px;padding:16px 18px;margin:12px 0 4px;max-width:600px;}
+.bo-row{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.bo-row:last-child{margin-bottom:0;}
+.bo-lbl{flex:1;font-size:14.5px;color:var(--np-ink);font-weight:500;}
+.bo-input{width:180px;flex-shrink:0;}
 
 @media (max-width:1080px){
   .np-card-body{flex-direction:column;}
@@ -795,8 +802,8 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
             <div class="np-main">
               <div class="np-field-row">
                 <div class="np-label">Title <span class="np-info">i</span><span class="req">Required</span></div>
-                <input class="np-input err" placeholder="" />
-                <div class="np-err-txt">This field is required.</div>
+                <input class="np-input err" id="npTitle" placeholder="" />
+                <div class="np-err-txt" id="npTitleErr">This field is required.</div>
               </div>
               <div class="np-toggle-row">
                 <div class="np-switch"></div>
@@ -826,7 +833,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
               <div class="np-field-row">
                 <div class="np-label">Channel SKU <span class="mi" style="font-size:15px;color:var(--np-slate);">link</span><span class="req">Required</span></div>
                 <div class="np-sku-wrap">
-                  <div class="np-sku-input"><input placeholder="Create SKU..." /><span class="np-pill-cnt">0 / 20</span></div>
+                  <div class="np-sku-input"><input id="npSku" placeholder="Create SKU..." /><span class="np-pill-cnt">0 / 20</span></div>
                   <button class="np-btn np-btn-royal">Generate SKU</button>
                 </div>
               </div>
@@ -901,13 +908,9 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
                   <div class="np-ed-foot"><span>p</span><span>0 words</span></div>
                 </div>
               </div>
-              <div class="np-field-row">
+              <div class="np-field-row" style="margin-bottom:0;">
                 <div class="np-label"><span>Meta Tags (Keywords) <span class="np-info">i</span></span></div>
                 <input class="np-input" />
-              </div>
-              <div class="np-field-row" style="margin-bottom:0;">
-                <div class="np-label"><span>Meta Description <span class="np-info">i</span></span></div>
-                <textarea class="np-textarea"></textarea>
               </div>
             </div>
             <aside class="np-aside">
@@ -1024,30 +1027,31 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
                 <div class="np-label">Listing Type</div>
                 <div class="np-select"><select><option>Fixed Price</option></select><span class="mi">expand_more</span></div>
               </div>
-              <div class="np-grid2" style="align-items:start;">
-                <div>
-                  <div class="np-label">Listing Price (USD) <span class="req">Required</span></div>
-                  <input class="np-input err" />
-                  <div class="np-err-txt">Price have to be greater than 0.</div>
-                </div>
-                <div>
-                  <div class="np-label">Retail Price</div>
-                  <input class="np-input" />
-                </div>
+              <div class="np-field-row">
+                <div class="np-label">Listing Price (USD) <span class="req">Required</span></div>
+                <input class="np-input err" id="npPrice" />
+                <div class="np-err-txt" id="npPriceErr">Price have to be greater than 0.</div>
               </div>
               <div class="np-toggle-row" style="margin-top:4px;">
-                <div class="np-switch"></div><span class="t-lbl">Best Offer <span class="np-info">i</span></span>
+                <div class="np-switch" id="npBestOffer"></div><span class="t-lbl">Best Offer <span class="np-info">i</span></span>
+              </div>
+              <div class="bo-card" id="bestOfferFields" style="display:none;">
+                <div class="bo-row">
+                  <div class="np-switch on"></div>
+                  <span class="bo-lbl">Automatically accept offers of at least</span>
+                  <input class="np-input bo-input" value="0" />
+                </div>
+                <div class="bo-row">
+                  <div class="np-switch on"></div>
+                  <span class="bo-lbl">Automatically decline offers lower than</span>
+                  <input class="np-input bo-input" value="0" />
+                </div>
               </div>
               <div class="np-sub-h" style="margin-top:6px;">Additional Pricing Settings</div>
               <div class="np-toggle-row"><div class="np-switch"></div><span class="t-lbl">Private Listing <span class="np-info">i</span></span></div>
               <div class="np-toggle-row"><div class="np-switch"></div><span class="t-lbl">Volume Pricing <span class="np-info">i</span></span></div>
               <p class="np-hint">eBay may charge fees for this feature, based on listing region.</p>
             </div>
-            <aside class="np-aside">
-              <div class="np-sub-h">Repricer Pricing Fields</div>
-              <div class="np-field-row"><div class="np-label">Floor Price <span class="np-info">i</span></div><input class="np-input" /></div>
-              <div class="np-field-row" style="margin-bottom:0;"><div class="np-label">Ceiling Price <span class="np-info">i</span></div><input class="np-input" /></div>
-            </aside>
           </div>
         </section>
 
@@ -1056,18 +1060,12 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
           <div class="np-card-head"><h3>Inventory</h3><span class="mi">expand_more</span></div>
           <div class="np-card-body">
             <div class="np-main">
-              <div class="np-field-row" style="max-width:300px;">
+              <div class="np-field-row" style="max-width:300px;margin-bottom:0;">
                 <div class="np-label">Quantity</div>
-                <input class="np-input" value="0" />
+                <input class="np-input" id="npQty" value="0" />
               </div>
-              <div class="np-toggle-row" style="margin-bottom:0;"><div class="np-switch"></div><span class="t-lbl">Inventory Control</span></div>
+              <div class="np-toggle-row" style="margin:16px 0 0;"><div class="np-switch"></div><span class="t-lbl">Inventory Control</span></div>
             </div>
-            <aside class="np-aside">
-              <div class="np-grid2">
-                <div><div class="np-label">Shelf <span class="opt">Optional</span></div><input class="np-input" /></div>
-                <div><div class="np-label">Bin <span class="opt">Optional</span></div><input class="np-input" /></div>
-              </div>
-            </aside>
           </div>
         </section>
 
@@ -1343,6 +1341,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
           <span class="ul-brand"><span class="ebay" style="font-size:15px;"><span class="e">e</span><span class="b">b</span><span class="a">a</span><span class="y">y</span></span> eBay</span>
           <span class="ul-brand"><span class="ul-az">a</span> Amazon</span>
           <span class="ul-brand"><span class="ul-wm">✶</span> Walmart</span>
+          <span class="ul-brand"><span class="ul-etsy">Etsy</span> Etsy</span>
         </div>
         <div class="ul-url-list" id="ulUrlList"></div>
       </div>
@@ -1355,7 +1354,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
       </div>
       <div class="ul-foot-btns">
         <button class="ul-cancel" id="ulCancel">Cancel</button>
-        <button class="ul-create">Add Product (1 credit)</button>
+        <button class="ul-create" id="ulCreate">Add Product (1 credit)</button>
       </div>
     </div>
   </div>
@@ -1417,7 +1416,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
       </div>
       <div class="ul-foot-btns">
         <button class="ul-cancel" id="tlCancel">Cancel</button>
-        <button class="ul-create">Add Product (1 credit)</button>
+        <button class="ul-create" id="tlCreate">Add Product (1 credit)</button>
       </div>
     </div>
   </div>
@@ -1515,6 +1514,15 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
   Array.prototype.forEach.call(document.querySelectorAll('.np-switch'), function(sw){
     sw.addEventListener('click', function(){ sw.classList.toggle('on'); });
   });
+
+  // Best Offer -> reveal auto accept/decline fields
+  var boSwitch = document.getElementById('npBestOffer');
+  var boFields = document.getElementById('bestOfferFields');
+  if(boSwitch && boFields){
+    boSwitch.addEventListener('click', function(){
+      boFields.style.display = boSwitch.classList.contains('on') ? '' : 'none';
+    });
+  }
 
   // collapsible cards (only those with a chevron)
   Array.prototype.forEach.call(document.querySelectorAll('.np-card-head'), function(head){
@@ -1682,6 +1690,66 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
   var discInfo = document.getElementById('discAddInfo');
   var discCount = document.getElementById('discCount');
   if(discInfo) discInfo.addEventListener('input', function(){ discCount.textContent = discInfo.value.length; });
+
+  /* ---- AI modals -> open the drawer pre-filled ---- */
+  function setVal(id, v){ var el = document.getElementById(id); if(el){ el.value = v; if(v) el.classList.remove('err'); } }
+  function hideEl(id){ var el = document.getElementById(id); if(el) el.style.display = 'none'; }
+  function skuFromTitle(t){
+    var s = (t || 'PRODUCT').toUpperCase().replace(/[^A-Z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 18);
+    return s || 'SKU-001';
+  }
+  function openDrawerPrefilled(p){
+    setVal('npTitle', p.title || '');
+    if(p.title) hideEl('npTitleErr');
+    setVal('npSku', p.sku || '');
+    setVal('npPrice', p.price || '');
+    if(p.price) hideEl('npPriceErr');
+    setVal('npQty', p.qty || '');
+    var c = document.getElementById('npContent');
+    if(c) c.scrollTop = 0;
+    var nav = document.querySelectorAll('#npNav .np-nav-item');
+    nav.forEach(function(it, i){ it.classList.toggle('active', i === 0); });
+    openDrawer();
+  }
+
+  // Title modal: capture which search result is selected
+  var tlChosen = null;
+  Array.prototype.forEach.call(document.querySelectorAll('#tlOverlay .tl-select'), function(btn){
+    btn.addEventListener('click', function(){
+      var card = btn.closest('.tl-listing-card');
+      Array.prototype.forEach.call(card.querySelectorAll('.tl-select'), function(b){ b.classList.remove('selected'); b.textContent = 'Select'; });
+      btn.classList.add('selected'); btn.textContent = 'Selected';
+      tlChosen = btn.closest('.tl-result').querySelector('.name').textContent.trim();
+    });
+  });
+  document.getElementById('tlCreate').addEventListener('click', function(){
+    var name = tlChosen;
+    if(!name){
+      var first = document.querySelector('#tlOverlay .tl-result .name');
+      name = first ? first.textContent.trim() : '';
+    }
+    closeTL();
+    openDrawerPrefilled({ title: name, sku: skuFromTitle(name), price: '19.99', qty: '1' });
+  });
+
+  // URLs modal: build product info from the first non-empty URL
+  document.getElementById('ulCreate').addEventListener('click', function(){
+    var url = '';
+    Array.prototype.forEach.call(document.querySelectorAll('#ulOverlay .ul-url-input'), function(i){
+      if(!url && i.value.trim()) url = i.value.trim();
+    });
+    var title = 'Imported product';
+    if(url){
+      var m = url.match(/ebay\.[^/]+\/itm\/(\d+)/i) || url.match(/\/(?:itm|p|dp)\/([A-Za-z0-9]+)/i);
+      if(m){ title = 'eBay Item ' + m[1]; }
+      else {
+        try { title = 'Product from ' + (new URL(url)).hostname.replace(/^www\./, ''); }
+        catch(e){ title = url; }
+      }
+    }
+    closeUL();
+    openDrawerPrefilled({ title: title, sku: skuFromTitle(title), price: '19.99', qty: '1' });
+  });
 
   // Add Value (within each option editor)
   Array.prototype.forEach.call(varSection.querySelectorAll('[data-addvalue]'), function(link){

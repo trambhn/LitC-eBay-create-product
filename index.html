@@ -607,6 +607,34 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
 .fmt-datetime-wrap.show{display:block;}
 .fmt-datetime{height:44px;}
 
+/* ===== CATEGORY PICKER (Primary / Secondary Category) ===== */
+.cat-field{margin-bottom:22px;}
+.cat-crumb-row{display:flex;align-items:center;gap:14px;margin:8px 0 14px;}
+.cat-crumb{font-size:16.5px;font-weight:700;color:var(--np-ink);}
+.cat-crumb.empty{font-weight:500;font-style:italic;color:#9AA7C0;}
+.cat-clear{display:inline-flex;align-items:center;gap:4px;color:var(--np-red);font-weight:600;font-size:13px;cursor:pointer;}
+.cat-clear .mi{font-size:16px;}
+.cat-clear:hover{text-decoration:underline;}
+.cat-toprow{display:flex;align-items:center;justify-content:flex-end;margin-bottom:10px;}
+.cat-variation-chk{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--np-ink);cursor:pointer;user-select:none;}
+.cat-checkbox{width:19px;height:19px;border:1.5px solid #9AA7C0;border-radius:4px;background:#fff;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.cat-checkbox .mi{font-size:14px;color:#fff;display:none;}
+.cat-checkbox.on{background:var(--blue);border-color:var(--blue);}
+.cat-checkbox.on .mi{display:block;}
+.cat-search-wrap{position:relative;}
+.cat-search-bar{display:flex;align-items:center;gap:10px;height:46px;border:1px solid var(--np-line);
+  border-radius:9px;background:var(--np-field);padding:0 14px;}
+.cat-search-bar .mi{font-size:20px;color:#97A0AF;}
+.cat-search-bar input{flex:1;border:none;outline:none;background:transparent;font-size:14px;font-family:inherit;color:var(--np-ink);}
+.cat-search-bar input::placeholder{color:#9AA7C0;}
+.cat-search-bar .mi.caret{margin-left:auto;}
+.cat-suggest{position:absolute;top:52px;left:0;right:0;background:#fff;border:1px solid var(--np-line);
+  border-radius:9px;box-shadow:0 10px 28px rgba(23,43,77,.14);padding:6px;z-index:20;display:none;max-height:240px;overflow-y:auto;}
+.cat-suggest.open{display:block;}
+.cat-suggest-item{padding:10px 12px;border-radius:7px;font-size:14px;color:var(--np-ink);cursor:pointer;}
+.cat-suggest-item:hover{background:var(--np-soft);}
+
 @media (max-width:1080px){
   .np-card-body{flex-direction:column;}
   .np-aside{width:auto;border-left:none;border-top:1px solid var(--np-line);}
@@ -771,9 +799,9 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
         <div class="np-nav-item" data-target="sec-item"><span class="mi">info</span>Item Information<span class="req-dot"></span></div>
         <div class="np-nav-item" data-target="sec-identifiers"><span class="mi">qr_code_2</span>Identifiers</div>
         <div class="np-nav-item" data-target="sec-description"><span class="mi">notes</span>Description<span class="req-dot"></span></div>
-        <div class="np-nav-item" data-target="sec-required"><span class="mi">rule</span>Required Specifics</div>
-        <div class="np-nav-item" data-target="sec-recommended"><span class="mi">recommend</span>Recommended Specifics</div>
-        <div class="np-nav-item" data-target="sec-optional"><span class="mi">list_alt</span>Optional Specifics</div>
+        <div class="np-nav-item" data-target="sec-required" id="navRequired" style="display:none;"><span class="mi">rule</span>Required Specifics</div>
+        <div class="np-nav-item" data-target="sec-recommended" id="navRecommended" style="display:none;"><span class="mi">recommend</span>Recommended Specifics</div>
+        <div class="np-nav-item" data-target="sec-optional" id="navOptional" style="display:none;"><span class="mi">list_alt</span>Optional Specifics</div>
         <div class="np-nav-item" data-target="sec-custom"><span class="mi">tune</span>Custom Specifics</div>
         <div class="np-nav-item" data-target="sec-compatibility"><span class="mi">directions_car</span>Compatibility</div>
         <div class="np-nav-item" data-target="sec-pricing"><span class="mi">sell</span>Pricing<span class="req-dot"></span></div>
@@ -825,25 +853,62 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
                 <input class="np-input err" id="npTitle" placeholder="" />
                 <div class="np-err-txt" id="npTitleErr">This field is required.</div>
               </div>
-              <div class="np-toggle-row">
-                <div class="np-switch"></div>
-                <span class="t-lbl">Bold Title <span class="np-info">i</span></span>
-              </div>
               <div class="np-field-row">
                 <div class="np-label">Sub Title <span class="np-info">i</span></div>
                 <input class="np-input" placeholder="" />
               </div>
-              <div class="np-field-row">
-                <div class="np-label">Category</div>
-                <div class="np-input-ai">
-                  <div class="np-select"><select><option>Search Category</option></select><span class="mi">expand_more</span></div>
-                  <button class="np-icon-btn"><span class="mi">search</span></button>
+
+              <!-- Primary Category -->
+              <div class="np-field-row cat-field" data-cat-role="primary">
+                <div class="np-label">Primary Category <span class="req">*</span></div>
+                <div class="cat-crumb-row">
+                  <div class="cat-crumb empty" data-cat-crumb>No category selected</div>
+                  <span class="cat-clear" data-cat-clear style="display:none;"><span class="mi">close</span>Clear</span>
+                </div>
+                <div class="cat-toprow">
+                  <label class="cat-variation-chk"><span class="cat-checkbox" data-cat-varcheck><span class="mi">check</span></span>Show variation-supported categories</label>
+                </div>
+                <div class="cat-search-wrap">
+                  <div class="cat-search-bar">
+                    <span class="mi">search</span>
+                    <input placeholder="Search Product Category" data-cat-input />
+                    <span class="mi caret">expand_more</span>
+                  </div>
+                  <div class="cat-suggest" data-cat-suggest>
+                    <div class="cat-suggest-item" data-crumb="Business &gt; Telephone Systems &gt; Other">Business &gt; Telephone Systems &gt; Other</div>
+                    <div class="cat-suggest-item" data-crumb="Electronics &gt; Cell Phones &amp; Accessories &gt; Cases, Covers &amp; Skins">Electronics &gt; Cell Phones &amp; Accessories &gt; Cases, Covers &amp; Skins</div>
+                    <div class="cat-suggest-item" data-crumb="Home &amp; Garden &gt; Kitchen, Dining &amp; Bar &gt; Small Kitchen Appliances">Home &amp; Garden &gt; Kitchen, Dining &amp; Bar &gt; Small Kitchen Appliances</div>
+                    <div class="cat-suggest-item" data-crumb="Clothing, Shoes &amp; Accessories &gt; Men &gt; Men's Shoes">Clothing, Shoes &amp; Accessories &gt; Men &gt; Men's Shoes</div>
+                  </div>
                 </div>
               </div>
-              <div class="np-toggle-row">
-                <div class="np-switch"></div>
-                <span class="t-lbl">Send Second eBay Category <span class="np-info">i</span></span>
+              <p class="np-hint" id="catSpecHint" style="margin:-10px 0 20px;">Select a Primary Category to reveal its Required, Recommended, and Optional item specifics.</p>
+
+              <!-- Secondary Category (always visible, no toggle) -->
+              <div class="np-field-row cat-field" data-cat-role="secondary">
+                <div class="np-label">Secondary Category <span class="opt">Optional</span></div>
+                <div class="cat-crumb-row">
+                  <div class="cat-crumb empty" data-cat-crumb>No category selected</div>
+                  <span class="cat-clear" data-cat-clear style="display:none;"><span class="mi">close</span>Clear</span>
+                </div>
+                <div class="cat-toprow">
+                  <label class="cat-variation-chk"><span class="cat-checkbox" data-cat-varcheck><span class="mi">check</span></span>Show variation-supported categories</label>
+                </div>
+                <div class="cat-search-wrap">
+                  <div class="cat-search-bar">
+                    <span class="mi">search</span>
+                    <input placeholder="Search Product Category" data-cat-input />
+                    <span class="mi caret">expand_more</span>
+                  </div>
+                  <div class="cat-suggest" data-cat-suggest>
+                    <div class="cat-suggest-item" data-crumb="Business &gt; Telephone Systems &gt; Other">Business &gt; Telephone Systems &gt; Other</div>
+                    <div class="cat-suggest-item" data-crumb="Electronics &gt; Cell Phones &amp; Accessories &gt; Cases, Covers &amp; Skins">Electronics &gt; Cell Phones &amp; Accessories &gt; Cases, Covers &amp; Skins</div>
+                    <div class="cat-suggest-item" data-crumb="Home &amp; Garden &gt; Kitchen, Dining &amp; Bar &gt; Small Kitchen Appliances">Home &amp; Garden &gt; Kitchen, Dining &amp; Bar &gt; Small Kitchen Appliances</div>
+                    <div class="cat-suggest-item" data-crumb="Clothing, Shoes &amp; Accessories &gt; Men &gt; Men's Shoes">Clothing, Shoes &amp; Accessories &gt; Men &gt; Men's Shoes</div>
+                  </div>
+                </div>
               </div>
+
               <div class="np-grid2">
                 <div><div class="np-label">Store Category</div><div class="np-select"><select><option>Store Category</option></select><span class="mi">expand_more</span></div></div>
                 <div><div class="np-label">2nd Store Category</div><div class="np-select"><select><option>2nd Store Category</option></select><span class="mi">expand_more</span></div></div>
@@ -909,46 +974,12 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
                   <div class="np-ed-foot"><span>p</span><span>0 words</span></div>
                 </div>
               </div>
-              <div class="np-field-row">
-                <div class="np-label"><span>Mobile Description <span class="np-info">i</span></span></div>
-                <div class="np-editor">
-                  <div class="np-ed-menubar"><span>File</span><span>Edit</span><span>View</span><span>Insert</span><span>Format</span><span>Tools</span><span>Table</span></div>
-                  <div class="np-ed-toolbar">
-                    <span class="mi">undo</span><span class="mi">redo</span><span class="np-ed-sep"></span>
-                    <span class="np-ed-pill">Paragraph <span class="mi" style="padding:0;">expand_more</span></span>
-                    <span class="np-ed-pill">Montserrat <span class="mi" style="padding:0;">expand_more</span></span>
-                    <span class="np-ed-pill">12pt <span class="mi" style="padding:0;">expand_more</span></span>
-                    <span class="np-ed-sep"></span>
-                    <span class="mi">format_bold</span><span class="mi">format_italic</span><span class="mi">format_underlined</span><span class="mi">strikethrough_s</span>
-                    <span class="np-ed-sep"></span>
-                    <span class="mi">format_align_left</span><span class="mi">format_align_center</span><span class="mi">format_align_right</span><span class="mi">format_align_justify</span>
-                    <span class="mi">more_horiz</span>
-                  </div>
-                  <div class="np-ed-area" style="height:110px;"></div>
-                  <div class="np-ed-foot"><span>p</span><span>0 words</span></div>
-                </div>
-              </div>
-              <div class="np-field-row" style="margin-bottom:0;">
-                <div class="np-label"><span>Meta Tags (Keywords) <span class="np-info">i</span></span></div>
-                <input class="np-input" />
-              </div>
             </div>
-            <aside class="np-aside">
-              <div class="np-sub-h">Listing Design <span class="np-info">i</span></div>
-              <div class="np-field-row">
-                <div class="np-label">Design Template <span class="opt">Optional</span></div>
-                <div class="np-input-ai">
-                  <div class="np-select"><select><option>None</option></select><span class="mi">expand_more</span></div>
-                  <button class="np-icon-btn"><span class="mi">visibility</span></button>
-                </div>
-              </div>
-              <a class="np-create-design">Create New Design <span class="mi">open_in_new</span></a>
-            </aside>
           </div>
         </section>
 
         <!-- 5a. REQUIRED ITEM SPECIFICS -->
-        <section class="np-card" id="sec-required">
+        <section class="np-card" id="sec-required" style="display:none;">
           <div class="np-card-head"><h3>Required Item Specifics</h3><span class="mi">expand_more</span></div>
           <div class="np-card-body"><div class="np-main">
             <p class="spec-note">These specifics are required by eBay to publish a listing in this category.</p>
@@ -962,7 +993,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
         </section>
 
         <!-- 5b. RECOMMENDED ITEM SPECIFICS -->
-        <section class="np-card" id="sec-recommended">
+        <section class="np-card" id="sec-recommended" style="display:none;">
           <div class="np-card-head"><h3>Recommended Item Specifics</h3><span class="mi">expand_more</span></div>
           <div class="np-card-body"><div class="np-main">
             <p class="spec-note">Adding these helps your listing show up in more buyer searches.</p>
@@ -976,7 +1007,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
         </section>
 
         <!-- 5c. OPTIONAL ITEM SPECIFICS -->
-        <section class="np-card" id="sec-optional">
+        <section class="np-card" id="sec-optional" style="display:none;">
           <div class="np-card-head"><h3>Optional Item Specifics</h3><span class="mi">expand_more</span></div>
           <div class="np-card-body"><div class="np-main">
             <p class="spec-note">Add any additional details buyers may search for.</p>
@@ -1120,11 +1151,11 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
           <div class="np-card-head"><h3>Inventory</h3><span class="mi">expand_more</span></div>
           <div class="np-card-body">
             <div class="np-main">
-              <div class="np-field-row" style="max-width:300px;margin-bottom:0;">
+              <div class="np-toggle-row" style="margin-top:0;"><div class="np-switch"></div><span class="t-lbl">Inventory Control</span></div>
+              <div class="np-field-row" style="max-width:300px;margin-bottom:0;margin-top:16px;">
                 <div class="np-label">Quantity</div>
                 <input class="np-input" id="npQty" value="0" />
               </div>
-              <div class="np-toggle-row" style="margin:16px 0 0;"><div class="np-switch"></div><span class="t-lbl">Inventory Control</span></div>
             </div>
           </div>
         </section>
@@ -1564,8 +1595,9 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
     var pos = content.scrollTop + 80;
     var current = navItems[0];
     navItems.forEach(function(it){
+      if(it.style.display === 'none') return;
       var el = document.getElementById(it.getAttribute('data-target'));
-      if(el && el.offsetTop <= pos) current = it;
+      if(el && el.style.display !== 'none' && el.offsetTop <= pos) current = it;
     });
     navItems.forEach(function(it){ it.classList.toggle('active', it===current); });
   });
@@ -1627,6 +1659,64 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
   var privDesc = document.getElementById('privateListingDesc');
   function togglePrivate(){ privBox.classList.toggle('on'); }
   if(privBox){ privBox.addEventListener('click', togglePrivate); privDesc.addEventListener('click', togglePrivate); }
+
+  /* ---- Category picker (Primary / Secondary Category) ---- */
+  function setCategory(field, crumbText){
+    var crumbEl = field.querySelector('[data-cat-crumb]');
+    var clearEl = field.querySelector('[data-cat-clear]');
+    var inputEl = field.querySelector('[data-cat-input]');
+    crumbEl.innerHTML = crumbText;
+    crumbEl.classList.remove('empty');
+    clearEl.style.display = '';
+    inputEl.value = '';
+    field.querySelector('[data-cat-suggest]').classList.remove('open');
+    if(field.getAttribute('data-cat-role') === 'primary') setSpecificsVisible(true);
+  }
+  function clearCategory(field){
+    var crumbEl = field.querySelector('[data-cat-crumb]');
+    var clearEl = field.querySelector('[data-cat-clear]');
+    crumbEl.textContent = 'No category selected';
+    crumbEl.classList.add('empty');
+    clearEl.style.display = 'none';
+    if(field.getAttribute('data-cat-role') === 'primary') setSpecificsVisible(false);
+  }
+  function setSpecificsVisible(visible){
+    var d = visible ? '' : 'none';
+    ['sec-required','sec-recommended','sec-optional'].forEach(function(id){
+      var el = document.getElementById(id); if(el) el.style.display = d;
+    });
+    ['navRequired','navRecommended','navOptional'].forEach(function(id){
+      var el = document.getElementById(id); if(el) el.style.display = visible ? '' : 'none';
+    });
+    var hint = document.getElementById('catSpecHint');
+    if(hint) hint.style.display = visible ? 'none' : '';
+  }
+  function bindCatField(field){
+    var input = field.querySelector('[data-cat-input]');
+    var suggest = field.querySelector('[data-cat-suggest]');
+    var clearEl = field.querySelector('[data-cat-clear]');
+    var varCheck = field.querySelector('[data-cat-varcheck]');
+
+    input.addEventListener('focus', function(){ suggest.classList.add('open'); });
+    input.addEventListener('input', function(){
+      var q = input.value.trim().toLowerCase();
+      Array.prototype.forEach.call(suggest.querySelectorAll('.cat-suggest-item'), function(item){
+        item.style.display = !q || item.textContent.toLowerCase().indexOf(q) > -1 ? '' : 'none';
+      });
+      suggest.classList.add('open');
+    });
+    document.addEventListener('click', function(e){
+      if(!field.contains(e.target)) suggest.classList.remove('open');
+    });
+    Array.prototype.forEach.call(suggest.querySelectorAll('.cat-suggest-item'), function(item){
+      item.addEventListener('click', function(){ setCategory(field, item.getAttribute('data-crumb')); });
+    });
+    clearEl.addEventListener('click', function(){ clearCategory(field); });
+    if(varCheck){ varCheck.addEventListener('click', function(){ varCheck.classList.toggle('on'); }); }
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('.cat-field'), bindCatField);
+  setSpecificsVisible(false);
+
 
   // collapsible cards (only those with a chevron)
   Array.prototype.forEach.call(document.querySelectorAll('.np-card-head'), function(head){

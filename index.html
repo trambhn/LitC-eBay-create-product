@@ -369,6 +369,34 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
 .gl-generate:hover{background:var(--blue-dark);}
 .gl-generate .mi{font-size:19px;}
 
+/* ============ PRODUCT CREATION LOADING STATE ============ */
+@keyframes procspin{to{transform:rotate(360deg);}}
+@keyframes rowFadeIn{0%{background:#EAFBF3;}100%{background:transparent;}}
+
+.np-btn:disabled{opacity:.65;cursor:not-allowed;}
+.btn-spin{width:15px;height:15px;border:2px solid rgba(255,255,255,.45);border-top-color:#fff;border-radius:50%;
+  display:inline-block;vertical-align:middle;margin-right:7px;animation:procspin .7s linear infinite;}
+.np-btn-ghost .btn-spin{border-color:rgba(66,82,110,.25);border-top-color:#42526E;}
+
+.row-new{animation:rowFadeIn 1.8s ease forwards;}
+
+/* ============ BATCH PROGRESS BAR (aggregate: X proceeding, Y left) ============ */
+.batch-progress{display:none;align-items:center;gap:14px;padding:13px 18px;border:1px solid var(--np-line);
+  border-radius:10px;background:#F7F9FC;margin-bottom:14px;}
+.batch-progress.show{display:flex;}
+.batch-progress-icon{width:20px;height:20px;flex-shrink:0;}
+.batch-progress-icon.spin{border:2.5px solid #DCE5F5;border-top-color:var(--blue);border-radius:50%;
+  animation:procspin .7s linear infinite;}
+.batch-progress-icon.done{background:#36B37E;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.batch-progress-icon.done .mi{font-size:14px;color:#fff;}
+.batch-progress-body{flex:1;min-width:0;}
+.batch-progress-toprow{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:7px;}
+.batch-progress-text{font-size:14px;font-weight:700;color:var(--np-ink);white-space:nowrap;}
+.batch-progress-sub{font-size:12.5px;color:var(--np-slate);white-space:nowrap;flex-shrink:0;}
+.batch-progress-barwrap{height:7px;background:#E4E8EF;border-radius:4px;overflow:hidden;}
+.batch-progress-bar{height:100%;background:var(--blue);border-radius:4px;width:0%;transition:width .45s ease;}
+.batch-progress.done .batch-progress-bar{background:#36B37E;}
+
 /* ============ URLs → LISTINGS MODAL ============ */
 .ul-overlay{position:fixed;inset:0;background:rgba(23,43,77,.5);display:flex;align-items:center;justify-content:center;
   padding:24px;opacity:0;visibility:hidden;transition:.2s;z-index:120;}
@@ -517,27 +545,6 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
 .cs-x{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--blue);background:none;cursor:pointer;flex-shrink:0;}
 .cs-x:hover{background:var(--np-soft);}
 .cs-x .mi{font-size:22px;}
-
-/* ===== COMPATIBILITY ===== */
-.compat-scroll{overflow-x:auto;}
-.compat-table{border:1px solid var(--np-line);border-radius:10px;overflow:hidden;min-width:880px;}
-.compat-h,.compat-r{display:flex;align-items:center;}
-.compat-h{background:#F4F6FB;border-bottom:1px solid var(--np-line);}
-.compat-h>div{padding:12px 14px;font-size:13px;font-weight:700;color:#42526E;}
-.compat-r{border-bottom:1px solid #EDF0F3;}
-.compat-r:last-child{border-bottom:none;}
-.compat-r>div{padding:10px 14px;}
-.cc-year{width:120px;}.cc-make{width:150px;}.cc-model{width:170px;}.cc-sub{width:140px;}.cc-note{flex:1;min-width:120px;}
-.cc-act{width:200px;display:flex;gap:8px;justify-content:flex-end;}
-.compat-r .np-select select{height:40px;}
-.compat-r .np-input{height:40px;}
-.compat-dup{height:36px;padding:0 14px;border:1px solid #9DBDF7;border-radius:7px;background:#fff;color:var(--blue);font-weight:600;font-size:13.5px;cursor:pointer;}
-.compat-dup:hover{background:#F4F8FF;}
-.compat-del{height:36px;padding:0 14px;border:1px solid #F1A9A9;border-radius:7px;background:#fff;color:#D7322B;font-weight:600;font-size:13.5px;cursor:pointer;}
-.compat-del:hover{background:#FDF3F3;}
-.compat-add{display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 18px;border-radius:8px;background:#EBECF0;color:#42526E;font-weight:600;font-size:14px;cursor:pointer;}
-.compat-add:hover{background:#DFE1E6;}
-.compat-add .mi{font-size:20px;}
 
 /* ===== ITEM DISCLOSURES ===== */
 .disc-row{display:flex;gap:16px;margin-bottom:22px;}
@@ -760,6 +767,17 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
       <span class="all"><span class="cbx"></span>Select all 1162 filtered listings</span>
     </div>
 
+    <div class="batch-progress" id="batchProgress">
+      <div class="batch-progress-icon spin" id="batchProgressIcon"></div>
+      <div class="batch-progress-body">
+        <div class="batch-progress-toprow">
+          <span class="batch-progress-text" id="batchProgressText">Creating products…</span>
+          <span class="batch-progress-sub" id="batchProgressSub">0 of 0 done</span>
+        </div>
+        <div class="batch-progress-barwrap"><div class="batch-progress-bar" id="batchProgressBar" style="width:0%"></div></div>
+      </div>
+    </div>
+
     <div class="table">
       <div class="t-head">
         <div class="c-chk"><span class="cbx"></span></div>
@@ -797,17 +815,16 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
       <nav class="np-nav" id="npNav">
         <div class="np-nav-item active" data-target="sec-images"><span class="mi">image</span>Images<span class="req-dot"></span></div>
         <div class="np-nav-item" data-target="sec-item"><span class="mi">info</span>Item Information<span class="req-dot"></span></div>
+        <div class="np-nav-item" data-target="sec-format"><span class="mi">event</span>Format and Duration</div>
         <div class="np-nav-item" data-target="sec-identifiers"><span class="mi">qr_code_2</span>Identifiers</div>
         <div class="np-nav-item" data-target="sec-description"><span class="mi">notes</span>Description<span class="req-dot"></span></div>
         <div class="np-nav-item" data-target="sec-required" id="navRequired" style="display:none;"><span class="mi">rule</span>Required Specifics</div>
         <div class="np-nav-item" data-target="sec-recommended" id="navRecommended" style="display:none;"><span class="mi">recommend</span>Recommended Specifics</div>
         <div class="np-nav-item" data-target="sec-optional" id="navOptional" style="display:none;"><span class="mi">list_alt</span>Optional Specifics</div>
         <div class="np-nav-item" data-target="sec-custom"><span class="mi">tune</span>Custom Specifics</div>
-        <div class="np-nav-item" data-target="sec-compatibility"><span class="mi">directions_car</span>Compatibility</div>
         <div class="np-nav-item" data-target="sec-pricing"><span class="mi">sell</span>Pricing<span class="req-dot"></span></div>
-        <div class="np-nav-item" data-target="sec-format"><span class="mi">event</span>Format and Duration</div>
         <div class="np-nav-item" data-target="sec-inventory"><span class="mi">inventory_2</span>Inventory</div>
-        <div class="np-nav-item" data-target="sec-variations"><span class="mi">style</span>Variations</div>
+        <div class="np-nav-item" data-target="sec-variations" id="navVariations"><span class="mi">style</span>Variations</div>
         <div class="np-nav-item" data-target="sec-disclosures"><span class="mi">verified_user</span>Item Disclosures</div>
       </nav>
 
@@ -930,6 +947,51 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
           </div>
         </section>
 
+        <!-- 2b. FORMAT AND DURATION -->
+        <section class="np-card" id="sec-format">
+          <div class="np-card-head"><h3>Format and Duration</h3><span class="mi">expand_more</span></div>
+          <div class="np-card-body"><div class="np-main">
+
+            <div class="np-field-row">
+              <div class="np-label">Listing Format <span class="req">*</span> <span class="np-info">?</span></div>
+              <div class="fmt-radio-group" id="fmtRadioGroup">
+                <div class="fmt-radio-opt" data-fmt="auction"><span class="fmt-radio on"></span>Auction</div>
+                <div class="fmt-radio-opt" data-fmt="fixed"><span class="fmt-radio"></span>Fixed Price Item</div>
+              </div>
+            </div>
+
+            <div class="np-field-row">
+              <div class="np-label">Duration <span class="req">*</span></div>
+              <div class="np-select" id="durationWrap">
+                <select id="durationSelect">
+                  <option>1 Day (rating must be &gt; 10)</option>
+                  <option>3 Days</option>
+                  <option>5 Days</option>
+                  <option>7 Days</option>
+                  <option>10 Days</option>
+                </select>
+                <span class="mi">expand_more</span>
+              </div>
+            </div>
+
+            <div class="fmt-check-row">
+              <span class="fmt-check-label">Scheduled</span>
+              <span class="fmt-box" id="scheduledBox"><span class="mi">check</span></span>
+              <span class="fmt-desc" id="scheduledDesc">Schedule the listing start time (UTC)</span>
+            </div>
+            <div class="fmt-datetime-wrap" id="scheduledDateWrap">
+              <input type="datetime-local" class="np-input fmt-datetime" />
+            </div>
+
+            <div class="fmt-check-row" style="margin-bottom:0;">
+              <span class="fmt-check-label">Private Listing</span>
+              <span class="fmt-box" id="privateListingBox"><span class="mi">check</span></span>
+              <span class="fmt-desc" id="privateListingDesc">Allow buyers to remain anonymous when they bid on or buy an item.</span>
+            </div>
+
+          </div></div>
+        </section>
+
         <!-- 3. IDENTIFIERS (img4) -->
         <section class="np-card" id="sec-identifiers">
           <div class="np-card-head"><h3>Identifiers</h3><span class="mi">expand_more</span></div>
@@ -1034,41 +1096,6 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
           </div></div>
         </section>
 
-        <!-- 5e. COMPATIBILITY -->
-        <section class="np-card" id="sec-compatibility">
-          <div class="np-card-head"><h3>Compatibility</h3><span class="mi">expand_more</span></div>
-          <div class="np-card-body"><div class="np-main">
-            <div class="np-note">
-              <span class="mi">error_outline</span>
-              <p>Compatibility is available for categories such as Vehicle Parts &amp; Accessories. Add the vehicles your item fits below.</p>
-            </div>
-            <div class="compat-scroll">
-              <div class="compat-table" id="compatTable">
-                <div class="compat-h">
-                  <div class="cc-year">Year</div><div class="cc-make">Make</div><div class="cc-model">Model</div><div class="cc-sub">Submodel</div><div class="cc-note">Note</div><div class="cc-act"></div>
-                </div>
-                <div class="compat-r">
-                  <div class="cc-year"><div class="np-select"><select><option>2017</option></select><span class="mi">expand_more</span></div></div>
-                  <div class="cc-make"><div class="np-select"><select><option>Arctic Cat</option></select><span class="mi">expand_more</span></div></div>
-                  <div class="cc-model"><div class="np-select"><select><option>Alterra TRV 1000</option></select><span class="mi">expand_more</span></div></div>
-                  <div class="cc-sub"><div class="np-select"><select><option>4x4 XT EPS</option></select><span class="mi">expand_more</span></div></div>
-                  <div class="cc-note"><input class="np-input" value="sss" /></div>
-                  <div class="cc-act"><button class="compat-dup" data-compdup>Duplicate</button><button class="compat-del" data-compdel>Delete</button></div>
-                </div>
-                <div class="compat-r">
-                  <div class="cc-year"><div class="np-select"><select><option>2017</option></select><span class="mi">expand_more</span></div></div>
-                  <div class="cc-make"><div class="np-select"><select><option>Arctic Cat</option></select><span class="mi">expand_more</span></div></div>
-                  <div class="cc-model"><div class="np-select"><select><option>Alterra TRV 1000</option></select><span class="mi">expand_more</span></div></div>
-                  <div class="cc-sub"><div class="np-select"><select><option>4x4 XT EPS</option></select><span class="mi">expand_more</span></div></div>
-                  <div class="cc-note"><input class="np-input" value="sss" /></div>
-                  <div class="cc-act"><button class="compat-dup" data-compdup>Duplicate</button><button class="compat-del" data-compdel>Delete</button></div>
-                </div>
-              </div>
-            </div>
-            <button class="compat-add" id="compatAdd" style="margin-top:14px;"><span class="mi">add</span>Add Compatibility</button>
-          </div></div>
-        </section>
-
         <!-- 6. PRICING (img8/9) -->
         <section class="np-card" id="sec-pricing">
           <div class="np-card-head"><h3>Pricing</h3><span class="mi">expand_more</span></div>
@@ -1094,56 +1121,8 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
                   <input class="np-input bo-input" value="0" />
                 </div>
               </div>
-              <div class="np-sub-h" style="margin-top:6px;">Additional Pricing Settings</div>
-              <div class="np-toggle-row"><div class="np-switch"></div><span class="t-lbl">Volume Pricing <span class="np-info">i</span></span></div>
-              <p class="np-hint">eBay may charge fees for this feature, based on listing region.</p>
             </div>
           </div>
-        </section>
-
-        <!-- 6b. FORMAT AND DURATION -->
-        <section class="np-card" id="sec-format">
-          <div class="np-card-head"><h3>Format and Duration</h3><span class="mi">expand_more</span></div>
-          <div class="np-card-body"><div class="np-main">
-
-            <div class="np-field-row">
-              <div class="np-label">Listing Format <span class="req">*</span> <span class="np-info">?</span></div>
-              <div class="fmt-radio-group" id="fmtRadioGroup">
-                <div class="fmt-radio-opt" data-fmt="auction"><span class="fmt-radio on"></span>Auction</div>
-                <div class="fmt-radio-opt" data-fmt="fixed"><span class="fmt-radio"></span>Fixed Price Item</div>
-              </div>
-            </div>
-
-            <div class="np-field-row">
-              <div class="np-label">Duration <span class="req">*</span></div>
-              <div class="np-select" id="durationWrap">
-                <select id="durationSelect">
-                  <option>1 Day (rating must be &gt; 10)</option>
-                  <option>3 Days</option>
-                  <option>5 Days</option>
-                  <option>7 Days</option>
-                  <option>10 Days</option>
-                </select>
-                <span class="mi">expand_more</span>
-              </div>
-            </div>
-
-            <div class="fmt-check-row">
-              <span class="fmt-check-label">Scheduled</span>
-              <span class="fmt-box" id="scheduledBox"><span class="mi">check</span></span>
-              <span class="fmt-desc" id="scheduledDesc">Schedule the listing start time (UTC)</span>
-            </div>
-            <div class="fmt-datetime-wrap" id="scheduledDateWrap">
-              <input type="datetime-local" class="np-input fmt-datetime" />
-            </div>
-
-            <div class="fmt-check-row" style="margin-bottom:0;">
-              <span class="fmt-check-label">Private Listing</span>
-              <span class="fmt-box" id="privateListingBox"><span class="mi">check</span></span>
-              <span class="fmt-desc" id="privateListingDesc">Allow buyers to remain anonymous when they bid on or buy an item.</span>
-            </div>
-
-          </div></div>
         </section>
 
         <!-- 7. INVENTORY (img10/11) -->
@@ -1325,8 +1304,8 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
     <div class="np-foot">
       <button class="np-btn np-btn-ghost" id="npCancel">Cancel</button>
       <div class="np-foot-right">
-        <button class="np-btn np-btn-ghost">Save Product</button>
-        <button class="np-btn np-btn-royal">Save and list product to eBay</button>
+        <button class="np-btn np-btn-ghost" id="npSaveProduct">Save Product</button>
+        <button class="np-btn np-btn-royal" id="npSaveAndList">Save and list product to eBay</button>
       </div>
     </div>
   </aside>
@@ -1636,6 +1615,12 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
       durationSelect.disabled = true;
       durationWrap.classList.add('disabled');
     }
+    // Auction listings don't support Variations on eBay -> hide the section
+    var varSec = document.getElementById('sec-variations');
+    var varNav = document.getElementById('navVariations');
+    var hideVariations = fmt === 'auction';
+    if(varSec) varSec.style.display = hideVariations ? 'none' : '';
+    if(varNav) varNav.style.display = hideVariations ? 'none' : '';
   }
   if(fmtGroup){
     Array.prototype.forEach.call(fmtGroup.querySelectorAll('.fmt-radio-opt'), function(opt){
@@ -1849,27 +1834,6 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
     csRows.appendChild(row);
   });
 
-  /* ---- Compatibility: duplicate / delete / add rows ---- */
-  var compatTable = document.getElementById('compatTable');
-  function compatBind(row){
-    var del = row.querySelector('[data-compdel]');
-    if(del) del.addEventListener('click', function(){ row.remove(); });
-    var dup = row.querySelector('[data-compdup]');
-    if(dup) dup.addEventListener('click', function(){
-      var c = row.cloneNode(true);
-      compatBind(c);
-      row.parentNode.insertBefore(c, row.nextSibling);
-    });
-  }
-  Array.prototype.forEach.call(compatTable.querySelectorAll('.compat-r'), compatBind);
-  document.getElementById('compatAdd').addEventListener('click', function(){
-    var first = compatTable.querySelector('.compat-r');
-    var c = first.cloneNode(true);
-    Array.prototype.forEach.call(c.querySelectorAll('input'), function(i){ i.value = ''; });
-    compatBind(c);
-    compatTable.appendChild(c);
-  });
-
   /* ---- Add Document modal ---- */
   var dmOverlay = document.getElementById('dmOverlay');
   function openDM(){ dmOverlay.classList.add('open'); }
@@ -1885,64 +1849,52 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
   var discCount = document.getElementById('discCount');
   if(discInfo) discInfo.addEventListener('input', function(){ discCount.textContent = discInfo.value.length; });
 
-  /* ---- AI modals -> open the drawer pre-filled ---- */
-  function setVal(id, v){ var el = document.getElementById(id); if(el){ el.value = v; if(v) el.classList.remove('err'); } }
-  function hideEl(id){ var el = document.getElementById(id); if(el) el.style.display = 'none'; }
+  /* ---- AI modals -> create product(s) immediately (no drawer pre-fill) ---- */
   function skuFromTitle(t){
     var s = (t || 'PRODUCT').toUpperCase().replace(/[^A-Z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 18);
     return s || 'SKU-001';
   }
-  function openDrawerPrefilled(p){
-    setVal('npTitle', p.title || '');
-    if(p.title) hideEl('npTitleErr');
-    setVal('npSku', p.sku || '');
-    setVal('npPrice', p.price || '');
-    if(p.price) hideEl('npPriceErr');
-    setVal('npQty', p.qty || '');
-    var c = document.getElementById('npContent');
-    if(c) c.scrollTop = 0;
-    var nav = document.querySelectorAll('#npNav .np-nav-item');
-    nav.forEach(function(it, i){ it.classList.toggle('active', i === 0); });
-    openDrawer();
-  }
 
-  // Title modal: capture which search result is selected
-  var tlChosen = null;
+  // Title modal: track selection per Listing card (multiple cards can each have their own pick)
   Array.prototype.forEach.call(document.querySelectorAll('#tlOverlay .tl-select'), function(btn){
     btn.addEventListener('click', function(){
       var card = btn.closest('.tl-listing-card');
       Array.prototype.forEach.call(card.querySelectorAll('.tl-select'), function(b){ b.classList.remove('selected'); b.textContent = 'Select'; });
       btn.classList.add('selected'); btn.textContent = 'Selected';
-      tlChosen = btn.closest('.tl-result').querySelector('.name').textContent.trim();
+      card.setAttribute('data-selected-name', btn.closest('.tl-result').querySelector('.name').textContent.trim());
     });
   });
   document.getElementById('tlCreate').addEventListener('click', function(){
-    var name = tlChosen;
-    if(!name){
+    var items = [];
+    Array.prototype.forEach.call(document.querySelectorAll('#tlOverlay .tl-listing-card'), function(card){
+      var name = card.getAttribute('data-selected-name');
+      if(name) items.push({ title: name, sku: skuFromTitle(name), qty: '1' });
+    });
+    if(!items.length){
       var first = document.querySelector('#tlOverlay .tl-result .name');
-      name = first ? first.textContent.trim() : '';
+      if(first){ var n = first.textContent.trim(); items.push({ title: n, sku: skuFromTitle(n), qty: '1' }); }
     }
     closeTL();
-    openDrawerPrefilled({ title: name, sku: skuFromTitle(name), price: '19.99', qty: '1' });
+    enqueueProductCreations(items);
   });
 
-  // URLs modal: build product info from the first non-empty URL
+  // URLs modal: create one product per non-empty URL entered
   document.getElementById('ulCreate').addEventListener('click', function(){
-    var url = '';
+    var items = [];
     Array.prototype.forEach.call(document.querySelectorAll('#ulOverlay .ul-url-input'), function(i){
-      if(!url && i.value.trim()) url = i.value.trim();
-    });
-    var title = 'Imported product';
-    if(url){
+      var url = i.value.trim();
+      if(!url) return;
+      var title = 'Imported product';
       var m = url.match(/ebay\.[^/]+\/itm\/(\d+)/i) || url.match(/\/(?:itm|p|dp)\/([A-Za-z0-9]+)/i);
       if(m){ title = 'eBay Item ' + m[1]; }
       else {
         try { title = 'Product from ' + (new URL(url)).hostname.replace(/^www\./, ''); }
         catch(e){ title = url; }
       }
-    }
+      items.push({ title: title, sku: skuFromTitle(title), qty: '1' });
+    });
     closeUL();
-    openDrawerPrefilled({ title: title, sku: skuFromTitle(title), price: '19.99', qty: '1' });
+    enqueueProductCreations(items);
   });
 
   // Add Value (within each option editor)
@@ -1977,6 +1929,120 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
       bindVTrash(row.querySelector('[data-vtrash]'));
     });
   });
+
+  /* ---- Product creation queue: rows appear once ready; aggregate progress bar shows status ---- */
+  var procCounter = 0;
+
+  function buildRealRow(title, sku, qty){
+    var row = document.createElement('div');
+    row.className = 't-row row-new';
+    row.innerHTML = '<div class="c-chk"><span class="cbx"></span></div>'
+      + '<div class="c-img"><div class="thumb"><span class="mi">image</span></div></div>'
+      + '<div class="c-link"><span class="ldot"></span><span class="mi">link</span></div>'
+      + '<div class="c-status"></div>'
+      + '<div class="c-name"><span class="name-link">' + title + '</span></div>'
+      + '<div class="c-sku cell-sub">' + sku + '</div>'
+      + '<div class="c-qty cell-sub">' + qty + '</div>';
+    return row;
+  }
+  function bumpActiveCount(n){
+    var pill = document.querySelector('.tab.active .pill-blue');
+    if(!pill) return;
+    var v = parseInt(pill.textContent.replace(/[^0-9]/g, ''), 10) || 0;
+    pill.textContent = v + n;
+  }
+
+  function insertRealRow(item){
+    var rowsEl = document.getElementById('rows');
+    rowsEl.insertBefore(buildRealRow(item.title, item.sku, item.qty), rowsEl.firstChild);
+  }
+
+  var PROCESS_TOTAL_MS = 15000; // total lifetime of each item's process, for easier review
+
+  /* ---- Aggregate batch progress bar: X proceeding, Y left ---- */
+  var batchTotal = 0, batchDone = 0, batchHideTimer = null;
+  var batchEl = document.getElementById('batchProgress');
+  var batchIcon = document.getElementById('batchProgressIcon');
+  var batchText = document.getElementById('batchProgressText');
+  var batchSub = document.getElementById('batchProgressSub');
+  var batchBar = document.getElementById('batchProgressBar');
+
+  function refreshBatchUI(){
+    var remaining = Math.max(batchTotal - batchDone, 0);
+    var pct = batchTotal > 0 ? Math.round((batchDone / batchTotal) * 100) : 0;
+    batchBar.style.width = pct + '%';
+    batchText.textContent = 'Creating ' + batchTotal + ' product' + (batchTotal > 1 ? 's' : '') + '…';
+    batchSub.textContent = batchDone + ' of ' + batchTotal + ' done · ' + remaining + ' left';
+  }
+  function batchStart(n){
+    clearTimeout(batchHideTimer);
+    batchTotal += n;
+    batchEl.classList.remove('done');
+    batchIcon.className = 'batch-progress-icon spin';
+    batchIcon.innerHTML = '';
+    refreshBatchUI();
+    batchEl.classList.add('show');
+  }
+  function batchItemDone(){
+    batchDone += 1;
+    refreshBatchUI();
+    if(batchDone >= batchTotal){
+      batchEl.classList.add('done');
+      batchIcon.className = 'batch-progress-icon done';
+      batchIcon.innerHTML = '<span class="mi">check</span>';
+      batchText.textContent = batchTotal + ' product' + (batchTotal > 1 ? 's' : '') + ' created';
+      batchSub.textContent = 'All done';
+      batchHideTimer = setTimeout(function(){
+        batchEl.classList.remove('show');
+        batchTotal = 0; batchDone = 0;
+      }, 2400);
+    }
+  }
+
+  function runItemTimeline(item){
+    setTimeout(function(){
+      insertRealRow(item);
+      bumpActiveCount(1);
+      batchItemDone();
+    }, PROCESS_TOTAL_MS);
+  }
+
+  function enqueueProductCreations(items){
+    if(!items || !items.length) return;
+    items.forEach(function(item){ item.id = 'p' + (++procCounter); });
+    batchStart(items.length);
+    items.forEach(function(item, idx){
+      setTimeout(function(){ runItemTimeline(item); }, idx * 400);
+    });
+  }
+
+  function collectDrawerValues(){
+    var titleEl = document.getElementById('npTitle');
+    var skuEl = document.getElementById('npSku');
+    var qtyEl = document.getElementById('npQty');
+    var title = (titleEl && titleEl.value.trim()) || 'New Product';
+    var sku = (skuEl && skuEl.value.trim()) || skuFromTitle(title);
+    var qty = (qtyEl && qtyEl.value.trim()) || '1';
+    return { title: title, sku: sku, qty: qty };
+  }
+
+  function handleSaveClick(btn, otherBtn, alsoList){
+    if(btn.disabled) return;
+    var vals = collectDrawerValues();
+    var original = btn.innerHTML;
+    btn.disabled = true; otherBtn.disabled = true;
+    btn.innerHTML = '<span class="btn-spin"></span>' + (alsoList ? 'Publishing…' : 'Saving…');
+    setTimeout(function(){
+      btn.innerHTML = original; btn.disabled = false; otherBtn.disabled = false;
+      closeDrawer();
+      enqueueProductCreations([{ title: vals.title, sku: vals.sku, qty: vals.qty, alsoList: alsoList }]);
+    }, 700);
+  }
+
+  var npSaveProduct = document.getElementById('npSaveProduct');
+  var npSaveAndList = document.getElementById('npSaveAndList');
+  npSaveProduct.addEventListener('click', function(){ handleSaveClick(npSaveProduct, npSaveAndList, false); });
+  npSaveAndList.addEventListener('click', function(){ handleSaveClick(npSaveAndList, npSaveProduct, true); });
 </script>
 </body>
 </html>

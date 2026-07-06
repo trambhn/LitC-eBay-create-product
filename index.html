@@ -391,8 +391,8 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
 .batch-progress-icon.done .mi{font-size:14px;color:#fff;}
 .batch-progress-body{flex:1;min-width:0;}
 .batch-progress-toprow{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:7px;}
+.batch-progress-sub{font-size:12.5px;font-weight:600;color:var(--np-slate);white-space:nowrap;flex-shrink:0;}
 .batch-progress-text{font-size:14px;font-weight:700;color:var(--np-ink);white-space:nowrap;}
-.batch-progress-sub{font-size:12.5px;color:var(--np-slate);white-space:nowrap;flex-shrink:0;}
 .batch-progress-barwrap{height:7px;background:#E4E8EF;border-radius:4px;overflow:hidden;}
 .batch-progress-bar{height:100%;background:var(--blue);border-radius:4px;width:0%;transition:width .45s ease;}
 .batch-progress.done .batch-progress-bar{background:#36B37E;}
@@ -772,7 +772,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
       <div class="batch-progress-body">
         <div class="batch-progress-toprow">
           <span class="batch-progress-text" id="batchProgressText">Creating products…</span>
-          <span class="batch-progress-sub" id="batchProgressSub">0 of 0 done</span>
+          <span class="batch-progress-sub" id="batchProgressSub">0 created · 0 left</span>
         </div>
         <div class="batch-progress-barwrap"><div class="batch-progress-bar" id="batchProgressBar" style="width:0%"></div></div>
       </div>
@@ -1972,7 +1972,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
     var pct = batchTotal > 0 ? Math.round((batchDone / batchTotal) * 100) : 0;
     batchBar.style.width = pct + '%';
     batchText.textContent = 'Creating ' + batchTotal + ' product' + (batchTotal > 1 ? 's' : '') + '…';
-    batchSub.textContent = batchDone + ' of ' + batchTotal + ' done · ' + remaining + ' left';
+    batchSub.textContent = batchDone + ' created · ' + remaining + ' left';
   }
   function batchStart(n){
     clearTimeout(batchHideTimer);
@@ -1991,7 +1991,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
       batchIcon.className = 'batch-progress-icon done';
       batchIcon.innerHTML = '<span class="mi">check</span>';
       batchText.textContent = batchTotal + ' product' + (batchTotal > 1 ? 's' : '') + ' created';
-      batchSub.textContent = 'All done';
+      batchSub.textContent = batchTotal + ' created · 0 left';
       batchHideTimer = setTimeout(function(){
         batchEl.classList.remove('show');
         batchTotal = 0; batchDone = 0;

@@ -950,6 +950,26 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
           <div class="np-card-body"><div class="np-main">
 
             <div class="np-field-row">
+              <div class="np-label">Condition <span class="req">*</span></div>
+              <div class="np-select">
+                <select>
+                  <option>Please select</option>
+                  <option selected>New</option>
+                  <option>New other (see details)</option>
+                  <option>Seller refurbished</option>
+                  <option>Used</option>
+                  <option>For parts or not working</option>
+                </select>
+                <span class="mi">expand_more</span>
+              </div>
+            </div>
+
+            <div class="np-field-row">
+              <div class="np-label">Condition Description</div>
+              <textarea class="np-textarea" rows="5"></textarea>
+            </div>
+
+            <div class="np-field-row">
               <div class="np-label">Listing Format <span class="req">*</span> <span class="np-info">?</span></div>
               <div class="fmt-radio-group" id="fmtRadioGroup">
                 <div class="fmt-radio-opt" data-fmt="auction"><span class="fmt-radio on"></span>Auction</div>

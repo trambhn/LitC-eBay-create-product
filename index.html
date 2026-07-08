@@ -1064,17 +1064,9 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
                 </div>
               </div>
 
-              <div class="np-grid2">
+              <div class="np-grid2" style="margin-bottom:0;">
                 <div><div class="np-label">Store Category</div><div class="np-select"><select><option>Store Category</option></select><span class="mi">expand_more</span></div></div>
                 <div><div class="np-label">2nd Store Category</div><div class="np-select"><select><option>2nd Store Category</option></select><span class="mi">expand_more</span></div></div>
-              </div>
-
-              <div class="np-field-row" style="margin-bottom:0;">
-                <div class="np-label">Channel SKU <span class="mi" style="font-size:15px;color:var(--np-slate);">link</span><span class="req">Required</span></div>
-                <div class="np-sku-wrap" style="max-width:460px;">
-                  <div class="np-sku-input"><input id="npSku" placeholder="Create SKU..." /><span class="np-pill-cnt">0 / 20</span></div>
-                  <button class="np-btn np-btn-royal">Generate SKU</button>
-                </div>
               </div>
             </div>
           </div>
@@ -1150,11 +1142,18 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
           <div class="np-card-head"><h3>Identifiers</h3><span class="mi">expand_more</span></div>
           <div class="np-card-body">
             <div class="np-main">
+              <div class="np-field-row">
+                <div class="np-label">SKU <span class="req">*</span></div>
+                <div class="np-sku-wrap" style="max-width:460px;">
+                  <div class="np-sku-input"><input id="npSku" placeholder="Create SKU..." /><span class="np-pill-cnt">0 / 20</span></div>
+                  <button class="np-btn np-btn-royal">Generate SKU</button>
+                </div>
+              </div>
               <div class="np-grid2">
-                <div><div class="np-label">Product Identifier (UPC) <span class="np-info">i</span></div><input class="np-input" /></div>
-                <div><div class="np-label">Product Identifier (EAN) <span class="np-info">i</span></div><input class="np-input" /></div>
-                <div><div class="np-label">Product Identifier (ISBN)</div><input class="np-input" /></div>
-                <div><div class="np-label">Product Identifier (MPN) <span class="np-info">i</span></div><input class="np-input" /></div>
+                <div><div class="np-label">UPC <span class="np-info">i</span></div><input class="np-input" /></div>
+                <div><div class="np-label">EAN <span class="np-info">i</span></div><input class="np-input" /></div>
+                <div><div class="np-label">ISBN</div><input class="np-input" /></div>
+                <div><div class="np-label">MPN <span class="np-info">i</span></div><input class="np-input" /></div>
               </div>
             </div>
             <aside class="np-aside">

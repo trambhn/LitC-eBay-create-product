@@ -1328,11 +1328,25 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
           <div class="np-card-head"><h3>Pricing</h3><span class="mi">expand_more</span></div>
           <div class="np-card-body">
             <div class="np-main">
-              <div class="np-field-row">
+              <div class="np-field-row" id="fixedPriceBlock" style="display:none;">
                 <div class="np-label">Listing Price (USD) <span class="req">Required</span></div>
                 <input class="np-input err" id="npPrice" />
                 <div class="np-err-txt" id="npPriceErr">Price have to be greater than 0.</div>
               </div>
+
+              <div id="auctionPriceBlock">
+                <div class="np-grid2">
+                  <div>
+                    <div class="np-label">Start Price (USD) <span class="req">Required</span></div>
+                    <input class="np-input" id="npStartPrice" />
+                  </div>
+                  <div>
+                    <div class="np-label">Buy It Now Price (USD) <span class="opt">Optional</span></div>
+                    <input class="np-input" id="npBuyNowPrice" />
+                  </div>
+                </div>
+              </div>
+
               <div class="np-toggle-row" style="margin-top:4px;">
                 <div class="np-switch" id="npBestOffer"></div><span class="t-lbl">Best Offer <span class="np-info">i</span></span>
               </div>
@@ -1845,6 +1859,14 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
     var hideVariations = fmt === 'auction';
     if(varSec) varSec.style.display = hideVariations ? 'none' : '';
     if(varNav) varNav.style.display = hideVariations ? 'none' : '';
+
+    // Auction -> Start Price / Buy It Now Price; Fixed Price -> Listing Price
+    var auctionPriceBlock = document.getElementById('auctionPriceBlock');
+    var fixedPriceBlock = document.getElementById('fixedPriceBlock');
+    if(auctionPriceBlock && fixedPriceBlock){
+      auctionPriceBlock.style.display = fmt === 'auction' ? '' : 'none';
+      fixedPriceBlock.style.display = fmt === 'auction' ? 'none' : '';
+    }
   }
   if(fmtGroup){
     Array.prototype.forEach.call(fmtGroup.querySelectorAll('.fmt-radio-opt'), function(opt){
